@@ -26,6 +26,7 @@ gallery:
     alt: "Друге тестове зображення у демонстраційній галереї"
 status: ${status}
 featured: false
+sourceUrl: https://example.org/news/test-editorial-cycle
 ---
 
 Це тимчасова тестова новина. Вона створюється лише в ізольованій копії проєкту.
@@ -40,6 +41,7 @@ summary: "Демонстраційний PDF для автоматичної п�
 pdf: /files/editorial-check.pdf
 status: ${status}
 academicYear: 2026–2027
+sourceUrl: https://example.org/documents/test-editorial-document
 ---
 
 Тимчасовий тестовий документ.

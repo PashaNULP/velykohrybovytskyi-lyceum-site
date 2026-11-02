@@ -16,7 +16,15 @@ function frontmatter(path) {
   const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) throw new Error(`Немає YAML frontmatter: ${relative(root, path)}`);
   const value = (name) => match[1].match(new RegExp(`^${name}:\\s*["']?([^\\n"']*)`, 'm'))?.[1]?.trim();
-  return { source, title: value('title'), slug: value('slug'), status: value('status'), pdf: value('pdf'), expiresAt: value('expiresAt') };
+  return {
+    source,
+    title: value('title'),
+    slug: value('slug'),
+    status: value('status'),
+    pdf: value('pdf'),
+    externalUrl: value('externalUrl'),
+    expiresAt: value('expiresAt'),
+  };
 }
 
 function assert(condition, message) {
@@ -53,7 +61,7 @@ for (const collection of ['news', 'documents', 'announcements', 'galleries']) {
     }
 
     if (collection === 'documents') {
-      if (entry.status === 'published') assert(entry.pdf, `Немає PDF в опублікованому документі: ${relative(root, path)}`);
+      if (entry.status === 'published') assert(entry.pdf || entry.externalUrl, `Немає PDF або офіційного посилання в опублікованому документі: ${relative(root, path)}`);
       if (entry.pdf) {
         const publicPdf = join(root, 'public', entry.pdf.replace(/^\//, ''));
         const builtPdf = join(dist, entry.pdf.replace(/^\//, ''));

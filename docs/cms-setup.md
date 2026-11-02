@@ -4,7 +4,7 @@
 
 ## Передумови
 
-- приватний GitHub-репозиторій уже створений і містить гілку `main`;
+- GitHub-репозиторій уже створений і містить гілку `main`; якщо він публічний, чернетки та медіа також доступні для перегляду в GitHub;
 - GitHub App Pages CMS має доступ лише до цього репозиторію;
 - Pages CMS відкривається для власника репозиторію без помилок конфігурації;
 - збірка `npm run verify` успішна.
@@ -27,7 +27,9 @@
 | `date` | `z.coerce.date()` | `yyyy-MM-dd` |
 | `status` select | `draft / review / published` | YAML string |
 | `cover`, `photos`, `gallery` | об'єкти `photo` | локальний URL + alt + caption |
-| `pdf` file | перевірений шлях `/files/*.pdf` | файл у `public/files/` |
+| `pdf` file | перевірений шлях `/files/*.pdf` | невеликий файл у `public/files/` |
+| `externalUrl` string | офіційне посилання | великий PDF поза репозиторієм |
+| `sourceUrl` string | адреса першоджерела | URL офіційної публікації |
 | `slug` | валідований у Zod | латиниця, цифри, дефіси |
 
 Нові Markdown-файли називаються за slug (`{fields.slug}.md`). Slug має бути унікальним і не змінюватися після публікації. Імена медіафайлів Pages CMS нормалізує через `rename: safe`.
