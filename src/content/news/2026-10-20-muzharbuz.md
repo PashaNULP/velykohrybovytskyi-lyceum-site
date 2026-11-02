@@ -5,9 +5,11 @@ publishedAt: 2026-10-20
 category: Події
 summary: "Творчість, таланти, благодійність і незабутні емоції — шкільні події, які об’єднують нашу ліцейну спільноту."
 cover:
-  src: "https://lh7-us.googleusercontent.com/sitesv-images-rt/AMxu72tKRtD5WbFqalubVJ8vM4ntMcxcs9usFJoT0n1Txi-pEiHLRF3YJnu-la_rmonN5KW6j68LiuiNuhxzktry4d4W-qKxeR4zSQy0GWAI_i9MiUe3-cbrJgg1ionTcTKQxPJNkrW_1M7g1kFR89kQhrLJlFqHM1xVKnU2-ErtQ3KfVYv_n84n1UhkRlpwZrtm4M34mAx2jb7uwtPe-lgb910DIas9bCaKI_YKs6YStlc=w1280"
-  alt: "Архівна світлина Великогрибовицького ліцею"
-gallery: []
+  src: "/media/images/lyceum/muzharbuz-02.jpg"
+  alt: "Учасники фестивалю Музгарбуз 2026 у Великогрибовицькому ліцеї"
+gallery:
+  - src: "/media/images/lyceum/muzharbuz-01.jpg"
+    alt: "Благодійний ярмарок під час фестивалю Музгарбуз"
 status: published
 featured: true
 seoTitle: "Музгарбуз: традиції, що об’єднують"

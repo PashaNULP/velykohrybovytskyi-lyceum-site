@@ -5,8 +5,8 @@ publishedAt: 2026-09-12
 category: Навчання
 summary: "Уроки, проєкти й відкриття. Тут розповідатимемо про найцікавіше з навчального життя ліцею."
 cover:
-  src: "https://lh7-us.googleusercontent.com/sitesv-images-rt/AMxu72s4i2g26BwfOF71ZmAfaIHvGYovFkOQARBbNqitrIo4BXWcg4BxLl3NJ458SfAleGsj0RfYgXj0LgknkBKx9zbnZL1rdDGK96GvzyVfswfrnen62o0YCCw47rV2Kc9k-NERtaUlSpVynWvdI0nPjVkEXcSWdoTS_k83kFGw-5I721gh8ljEeP5gUIUb_BNHMDk4-P_uEn8Y7wZK2d_txAdpQj1qMk-AGaksaFAh=w1280"
-  alt: "Архівна фотографія зі шкільного життя ліцею"
+  src: "/media/images/lyceum/power4girls-01.jpg"
+  alt: "Учениці Великогрибовицького ліцею на освітньому форумі POWER4Girls"
 gallery: []
 status: published
 featured: true

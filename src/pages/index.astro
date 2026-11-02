@@ -28,7 +28,7 @@ const featuredGallery = galleries[0];
     <div class="container">
       <div class="section-top"><div><span class="eyebrow">Обличчя нашого ліцею</span><h2 class="section-title" id="gallery-title">Життя у світлинах</h2><p class="section-sub">Події, зустрічі та щоденні моменти з життя нашої ліцейної спільноти.</p></div><a class="text-link" href="/halerei/">Усі фотогалереї <Icon name="arrow-right" /></a></div>
       <div class="school-gallery">
-        {schoolPhotos.map((src, index) => <div class="gallery-shot"><div class="gallery-fallback"><Icon name="book" /><span>Фото з архіву ліцею</span></div><ContentImage class="gallery-photo" src={src} alt={`Архівна світлина Великогрибовицького ліцею, фото ${index + 1}`} sizes="(max-width: 700px) 50vw, 33vw" /></div>)}
+        {schoolPhotos.map((photo) => <div class="gallery-shot"><div class="gallery-fallback"><Icon name="book" /><span>Фото ліцею</span></div><ContentImage class="gallery-photo" src={photo.src} alt={photo.alt} sizes="(max-width: 700px) 50vw, 33vw" /></div>)}
       </div>
       {featuredGallery && <a class="text-link gallery-collection-link" href={`/halerei/${featuredGallery.data.slug}/`}>Відкрити фотогалерею <Icon name="arrow-right" /></a>}
     </div>
