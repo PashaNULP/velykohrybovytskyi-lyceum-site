@@ -1,0 +1,336 @@
+media:
+  - name: images
+    label: Зображення
+    input: public/media/images
+    output: /media/images
+    extensions: [jpg, jpeg, png, webp, avif]
+    rename: safe
+  - name: documents
+    label: PDF-документи
+    input: public/files
+    output: /files
+    extensions: [pdf]
+    categories: [document]
+    rename: safe
+
+components:
+  status:
+    type: select
+    label: Статус
+    required: true
+    default: draft
+    description: Лише статус «Опубліковано» робить матеріал видимим на сайті. Файл чернетки все одно зберігається у приватному репозиторії.
+    options:
+      values:
+        - name: draft
+          label: Чернетка
+        - name: review
+          label: На перевірці
+        - name: published
+          label: Опубліковано
+  slug:
+    type: string
+    label: Slug адреси
+    required: true
+    description: Латинські малі літери, цифри й дефіси. Не змінюйте після публікації.
+    pattern:
+      regex: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      message: Використовуйте лише a-z, 0-9 і дефіси.
+  photo:
+    type: object
+    label: Фотографія
+    fields:
+      - name: src
+        label: Файл
+        type: image
+        required: true
+        options:
+          media: images
+      - name: alt
+        label: Альтернативний опис
+        type: string
+        required: true
+        description: Опишіть зміст зображення для людей, які його не бачать.
+      - name: caption
+        label: Підпис
+        type: string
+
+content:
+  - name: news
+    label: Новини
+    type: collection
+    path: src/content/news
+    format: yaml-frontmatter
+    filename:
+      template: "{fields.slug}.md"
+      field: false
+    view:
+      primary: title
+      fields: [title, publishedAt, category, status]
+      search: [title, summary, category]
+      sort: [publishedAt, title, status]
+      default:
+        sort: publishedAt
+        order: desc
+    fields:
+      - name: title
+        label: Заголовок
+        type: string
+        required: true
+      - name: slug
+        component: slug
+      - name: publishedAt
+        label: Дата публікації
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: category
+        label: Категорія
+        type: select
+        required: true
+        options:
+          values: [Події, Навчання, Спільнота, Досягнення]
+      - name: summary
+        label: Короткий опис
+        type: text
+        required: true
+        options:
+          minlength: 20
+          maxlength: 360
+      - name: cover
+        label: Головне зображення
+        component: photo
+      - name: gallery
+        label: Фотогалерея
+        type: object
+        list:
+          max: 30
+          collapsible:
+            collapsed: true
+            summary: "{alt}"
+        fields:
+          - name: src
+            label: Файл
+            type: image
+            required: true
+            options:
+              media: images
+          - name: alt
+            label: Альтернативний опис
+            type: string
+            required: true
+          - name: caption
+            label: Підпис
+            type: string
+      - name: status
+        component: status
+      - name: featured
+        label: Показувати серед останніх
+        type: boolean
+        default: false
+      - name: seoTitle
+        label: SEO-заголовок
+        type: string
+      - name: seoDescription
+        label: SEO-опис
+        type: text
+      - name: body
+        label: Текст новини
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+          media: images
+          switcher: false
+
+  - name: documents
+    label: Документи
+    type: collection
+    path: src/content/documents
+    format: yaml-frontmatter
+    filename:
+      template: "{fields.slug}.md"
+      field: false
+    view:
+      primary: title
+      fields: [title, documentDate, category, status]
+      search: [title, summary, category, academicYear]
+      sort: [documentDate, title, status]
+      default:
+        sort: documentDate
+        order: desc
+    fields:
+      - name: title
+        label: Назва документа
+        type: string
+        required: true
+      - name: slug
+        component: slug
+      - name: category
+        label: Категорія
+        type: select
+        required: true
+        options:
+          values: [Установчі документи, Освітній процес, Для батьків, Звіти]
+      - name: documentDate
+        label: Дата документа
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: summary
+        label: Короткий опис
+        type: text
+        required: true
+      - name: pdf
+        label: PDF-файл
+        type: file
+        required: true
+        options:
+          media: documents
+          extensions: [pdf]
+      - name: status
+        component: status
+      - name: academicYear
+        label: Навчальний рік
+        type: string
+        description: "Наприклад: 2026–2027"
+      - name: body
+        label: Примітки
+        type: rich-text
+        options:
+          format: markdown
+          media: false
+          switcher: false
+
+  - name: announcements
+    label: Оголошення
+    type: collection
+    path: src/content/announcements
+    format: yaml-frontmatter
+    filename:
+      template: "{fields.slug}.md"
+      field: false
+    view:
+      primary: title
+      fields: [title, publishedAt, expiresAt, important, status]
+      search: [title]
+      sort: [publishedAt, expiresAt, title, status]
+      default:
+        sort: publishedAt
+        order: desc
+    fields:
+      - name: title
+        label: Назва
+        type: string
+        required: true
+      - name: slug
+        component: slug
+      - name: publishedAt
+        label: Дата публікації
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: expiresAt
+        label: Актуальне до
+        type: date
+        default: ""
+        options:
+          format: yyyy-MM-dd
+      - name: status
+        component: status
+      - name: important
+        label: Важливе оголошення
+        type: boolean
+        default: false
+      - name: body
+        label: Текст оголошення
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+          media: false
+          switcher: false
+
+  - name: galleries
+    label: Фотогалереї
+    type: collection
+    path: src/content/galleries
+    format: yaml-frontmatter
+    filename:
+      template: "{fields.slug}.md"
+      field: false
+    view:
+      primary: title
+      fields: [title, date, status]
+      search: [title, description]
+      sort: [date, title, status]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: Назва
+        type: string
+        required: true
+      - name: slug
+        component: slug
+      - name: date
+        label: Дата
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: description
+        label: Опис
+        type: text
+        required: true
+      - name: cover
+        label: Обкладинка
+        component: photo
+      - name: photos
+        label: Фотографії
+        type: object
+        required: true
+        list:
+          min: 1
+          max: 60
+          collapsible:
+            collapsed: true
+            summary: "{alt}"
+        fields:
+          - name: src
+            label: Файл
+            type: image
+            required: true
+            options:
+              media: images
+          - name: alt
+            label: Альтернативний опис
+            type: string
+            required: true
+          - name: caption
+            label: Підпис
+            type: string
+      - name: status
+        component: status
+      - name: body
+        label: Додатковий текст
+        type: rich-text
+        options:
+          format: markdown
+          media: false
+          switcher: false
+
+settings:
+  content:
+    merge: true
+  commit:
+    identity: app
+    templates:
+      create: "content: створено {path} через Pages CMS"
+      update: "content: оновлено {path} через Pages CMS"
+      delete: "content: видалено {path} через Pages CMS"
+      rename: "content: перейменовано {oldPath} на {newPath} через Pages CMS"

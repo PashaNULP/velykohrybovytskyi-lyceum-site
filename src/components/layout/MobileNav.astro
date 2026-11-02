@@ -1,0 +1,18 @@
+---
+import Icon from '../ui/Icon.astro';
+import { navigation } from '../../data/site';
+
+interface Props { currentPath: string }
+const { currentPath } = Astro.props;
+const isActive = (href: string) => href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+---
+
+<details class="mobile-menu">
+  <summary class="menu-toggle" aria-label="Відкрити меню"><Icon name="menu" /></summary>
+  <nav class="mobile-nav" aria-label="Мобільна навігація">
+    {navigation.map((item) => (
+      <a class:list={['nav-link', { active: isActive(item.href) }]} aria-current={isActive(item.href) ? 'page' : undefined} href={item.href}>{item.label}</a>
+    ))}
+    <a class:list={['nav-link', { active: isActive('/kontakty/') }]} aria-current={isActive('/kontakty/') ? 'page' : undefined} href="/kontakty/">Контакти</a>
+  </nav>
+</details>

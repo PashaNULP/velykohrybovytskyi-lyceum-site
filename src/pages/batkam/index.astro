@@ -1,0 +1,7 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InnerHeader from '../../components/ui/InnerHeader.astro';
+import Icon from '../../components/ui/Icon.astro';
+const cards = [{icon:'users',title:'Вступ до ліцею',text:'Інформація щодо прийому, необхідних документів та відповідей на часті запитання.'},{icon:'calendar',title:'Оголошення для батьків',text:'Організаційні повідомлення, важливі дати й інші актуальні питання.'},{icon:'file',title:'Документи та правила',text:'Правила внутрішнього розпорядку, освітні програми та інша важлива інформація.'},{icon:'phone',title:'Зв’язок із ліцеєм',text:'Адреса й телефон для уточнення організаційних питань.'}] as const;
+---
+<BaseLayout title="Батькам · Великогрибовицький ліцей"><InnerHeader title="Батькам" description="Важливі матеріали для родин і майбутніх учнів ліцею." /><section class="content-section"><div class="container"><p class="demo-callout"><strong>Демонстраційний розділ.</strong> Інформацію буде звірено з адміністрацією перед публікацією.</p><div class="content-grid">{cards.map(card => <article class="info-card"><span class="card-icon"><Icon name={card.icon} /></span><h2>{card.title}</h2><p>{card.text}</p></article>)}</div></div></section></BaseLayout>

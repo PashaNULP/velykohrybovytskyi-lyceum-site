@@ -1,0 +1,16 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContentImage from '../../components/media/ContentImage.astro';
+import { formatDate, getPublishedGalleries } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const galleries = await getPublishedGalleries();
+  return galleries.map((gallery) => ({ params: { slug: gallery.data.slug }, props: { gallery } }));
+}
+
+interface Props { gallery: CollectionEntry<'galleries'> }
+const { gallery } = Astro.props;
+const { Content } = await render(gallery);
+---
+<BaseLayout title={`${gallery.data.title} · Великогрибовицький ліцей`} description={gallery.data.description}><section class="content-section"><div class="container"><article class="gallery-layout"><a class="article-back" href="/halerei/">← Усі фотогалереї</a><header class="article-header"><span class="eyebrow">Фотогалерея · {formatDate(gallery.data.date)}</span><h1>{gallery.data.title}</h1><p class="section-sub">{gallery.data.description}</p></header><div class="gallery-intro"><Content /></div><div class="content-photo-grid gallery-page-grid">{gallery.data.photos.map(photo => <figure><div class="content-photo"><div class="gallery-fallback">Фото тимчасово недоступне</div><ContentImage src={photo.src} alt={photo.alt} sizes="(max-width: 700px) 100vw, 33vw" /></div>{photo.caption && <figcaption>{photo.caption}</figcaption>}</figure>)}</div></article></div></section></BaseLayout>

@@ -1,0 +1,50 @@
+---
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import '../styles/global.css';
+import { site } from '../data/site';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = site.description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const isPublicProduction = import.meta.env.PUBLIC_SITE_ENV === 'production';
+const robots = isPublicProduction ? 'index,follow' : 'noindex,nofollow,noarchive';
+---
+
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#163447" />
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title="Новини Великогрибовицького ліцею" href={new URL('/rss.xml', Astro.site)} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="uk_UA" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Перейти до основного вмісту</a>
+    <Header currentPath={Astro.url.pathname} />
+    <main id="main-content"><slot /></main>
+    <Footer />
+    <div class="demo-banner"><strong>Прототип.</strong> Демонстраційний вміст; публікація та PDF поки не підключені.</div>
+    <script>
+      document.querySelectorAll<HTMLImageElement>('[data-fallback-image]').forEach((image) => {
+        image.addEventListener('error', () => { image.hidden = true; });
+        if (image.complete && image.naturalWidth === 0) image.hidden = true;
+      });
+    </script>
+  </body>
+</html>

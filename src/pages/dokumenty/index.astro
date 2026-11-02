@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InnerHeader from '../../components/ui/InnerHeader.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { formatDate, getPublishedDocuments } from '../../lib/content';
+const documents = await getPublishedDocuments();
+const categories = [...new Set(documents.map(item => item.data.category))];
+---
+<BaseLayout title="Документи · Великогрибовицький ліцей" description="Демонстраційний каталог документів Великогрибовицького ліцею.">
+  <InnerHeader title="Документи" description="Зрозумілий каталог документів, програм і звітів закладу освіти." />
+  <section class="content-section"><div class="container"><div class="section-top"><div><span class="eyebrow">Інформаційна відкритість</span><h2 class="section-title">Документи ліцею</h2><p class="section-sub">Структурований каталог із пошуком і категоріями. Усі поточні записи та PDF є тестовими й не належать до офіційних документів ліцею.</p></div><div><label class="sr-only" for="doc-search">Пошук документів</label><input class="search" id="doc-search" type="search" placeholder="Пошук за назвою…" autocomplete="off" /></div></div><div class="tag-row" aria-label="Категорії документів"><button class="filter-btn active" type="button" data-doc-category="all" aria-pressed="true">Усі</button>{categories.map(category => <button class="filter-btn" type="button" data-doc-category={category} aria-pressed="false">{category}</button>)}</div><p class="filter-status" id="doc-filter-status" aria-live="polite">Показано документів: {documents.length}</p><div class="doc-list" id="doc-results">{documents.map(({ data }) => <article class="doc-item" data-doc-item data-category={data.category} data-title={data.title.toLocaleLowerCase('uk')}><span class="doc-symbol"><Icon name="file" /></span><span class="doc-meta"><strong>{data.title}</strong><small>{data.category} · {formatDate(data.documentDate)}{data.academicYear ? ` · ${data.academicYear} н. р.` : ''}</small><span class="doc-summary">{data.summary}</span></span><span class="doc-actions"><a class="btn btn-outline" href={data.pdf} target="_blank" rel="noopener">Переглянути</a><a class="btn btn-dark" href={data.pdf} download>Завантажити</a></span></article>)}</div><div class="empty" id="doc-empty" hidden>За цим запитом документів не знайдено.</div><div class="doc-guide"><strong>Увага:</strong> це демонстраційні PDF, створені лише для технічної перевірки перегляду й завантаження. Вони не є офіційними документами ліцею.</div></div></section>
+  <script>
+    const search = document.querySelector<HTMLInputElement>('#doc-search');
+    const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-doc-category]')];
+    const items = [...document.querySelectorAll<HTMLElement>('[data-doc-item]')];
+    const status = document.querySelector('#doc-filter-status');
+    const empty = document.querySelector<HTMLElement>('#doc-empty');
+    let category = 'all';
+    const filterDocuments = () => {
+      const query = (search?.value ?? '').trim().toLocaleLowerCase('uk');
+      let visible = 0;
+      items.forEach((item) => {
+        const matchesCategory = category === 'all' || item.dataset.category === category;
+        const matchesSearch = !query || item.dataset.title?.includes(query);
+        item.hidden = !(matchesCategory && matchesSearch);
+        if (!item.hidden) visible++;
+      });
+      if (status) status.textContent = `Показано документів: ${visible}`;
+      if (empty) empty.hidden = visible !== 0;
+    };
+    search?.addEventListener('input', filterDocuments);
+    buttons.forEach((button) => button.addEventListener('click', () => {
+      category = button.dataset.docCategory ?? 'all';
+      buttons.forEach((item) => {
+        const active = item === button;
+        item.classList.toggle('active', active);
+        item.setAttribute('aria-pressed', String(active));
+      });
+      filterDocuments();
+    }));
+  </script>
+</BaseLayout>

@@ -1,0 +1,33 @@
+---
+import Icon from '../ui/Icon.astro';
+import MobileNav from './MobileNav.astro';
+import { navigation, site } from '../../data/site';
+
+interface Props { currentPath: string }
+const { currentPath } = Astro.props;
+const isActive = (href: string) => href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+---
+
+<div class="top-strip">
+  <div class="container">
+    <div class="left"><span class="tiny-dot"></span>Великі Грибовичі · Львівська міська рада</div>
+    <div class="right"><span>Демонстраційний дизайн • 2026</span><a target="_blank" rel="noopener noreferrer" href={site.currentSite}>Чинний сайт ↗</a></div>
+  </div>
+</div>
+<header class="header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="Великогрибовицький ліцей — головна">
+      <img class="logo" src="/images/lyceum-crest.webp" alt="" width="58" height="58" />
+      <span><span class="brand-title">Великогрибовицький<br />ліцей</span><span class="brand-sub">Львівської міської ради</span></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Головна навігація">
+      {navigation.map((item) => (
+        <a class:list={['nav-link', { active: isActive(item.href) }]} aria-current={isActive(item.href) ? 'page' : undefined} href={item.href}>{item.label}</a>
+      ))}
+    </nav>
+    <div class="header-actions">
+      <a class="btn btn-dark" href="/kontakty/">Контакти <Icon name="arrow-up-right" small /></a>
+      <MobileNav currentPath={currentPath} />
+    </div>
+  </div>
+</header>

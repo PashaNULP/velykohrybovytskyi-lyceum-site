@@ -1,0 +1,24 @@
+---
+import Icon from '../ui/Icon.astro';
+
+const links = [
+  { icon: 'book', label: 'Учням', description: 'Навчальні ресурси', href: '/uchnyam/' },
+  { icon: 'calendar', label: 'Батькам', description: 'Прийом та оголошення', href: '/batkam/' },
+  { icon: 'file', label: 'Документи', description: 'Програми й звіти', href: '/dokumenty/' },
+  { icon: 'users', label: 'Зв’язатися', description: 'Адреса та контакти', href: '/kontakty/' },
+] as const;
+---
+
+<section class="quick-wrap" aria-labelledby="quick-title">
+  <div class="container">
+    <div class="quick-head"><h2 id="quick-title">Корисне поруч</h2><span>Усе важливе — у два кліки</span></div>
+    <div class="quick-grid">
+      {links.map((link) => (
+        <a class="quick-card" href={link.href}>
+          <span class="quick-icon"><Icon name={link.icon} /></span>
+          <span class="quick-bottom"><span><span class="quick-label">{link.label}</span><span class="quick-desc">{link.description}</span></span><Icon name="arrow-up-right" /></span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

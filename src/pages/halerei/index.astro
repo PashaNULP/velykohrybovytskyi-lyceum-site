@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InnerHeader from '../../components/ui/InnerHeader.astro';
+import ContentImage from '../../components/media/ContentImage.astro';
+import { formatDate, getPublishedGalleries } from '../../lib/content';
+const galleries = await getPublishedGalleries();
+---
+<BaseLayout title="Фотогалереї · Великогрибовицький ліцей" description="Опубліковані фотогалереї Великогрибовицького ліцею."><InnerHeader title="Фотогалереї" description="Шкільне життя у світлинах. Поточна добірка демонстраційна й використовує архівні матеріали чинного сайту." /><section class="content-section"><div class="container"><div class="gallery-card-grid">{galleries.map(({ data }) => <article class="gallery-card"><a class="gallery-card-image" href={`/halerei/${data.slug}/`}><div class="gallery-fallback">Фото тимчасово недоступне</div><ContentImage src={data.cover.src} alt={data.cover.alt} sizes="(max-width: 700px) 100vw, 50vw" /></a><div class="gallery-card-body"><span class="news-category">{formatDate(data.date)} · {data.photos.length} фото</span><h2><a href={`/halerei/${data.slug}/`}>{data.title}</a></h2><p>{data.description}</p></div></article>)}</div></div></section></BaseLayout>

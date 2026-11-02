@@ -1,0 +1,36 @@
+---
+import Icon from '../ui/Icon.astro';
+import { site } from '../../data/site';
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="/">
+          <img class="logo" src="/images/lyceum-crest.webp" alt="" width="58" height="58" />
+          <span><span class="brand-title">Великогрибовицький<br />ліцей</span><span class="brand-sub">Львівської міської ради</span></span>
+        </a>
+        <p class="footer-blurb">Місце, де зростають ідеї, формується характер і починається шлях до великих відкриттів.</p>
+      </div>
+      <div>
+        <h2>Навігація</h2>
+        <ul>
+          <li><a href="/pro-litsei/">Про ліцей</a></li>
+          <li><a href="/novyny/">Новини та події</a></li>
+          <li><a href="/uchnyam/">Учням</a></li>
+          <li><a href="/batkam/">Батькам</a></li>
+          <li><a href="/dokumenty/">Документи</a></li>
+          <li><a href="/halerei/">Фотогалереї</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Зв'яжіться з нами</h2>
+        <div class="footer-contact"><Icon name="map-pin" /> <span>с. Великі Грибовичі,<br />вул. Стуса, 1а</span></div>
+        <div class="footer-contact"><Icon name="phone" /><a href={site.phoneHref}>{site.phone}</a></div>
+        <div class="footer-contact"><Icon name="external" /><a href={site.currentSite} target="_blank" rel="noopener noreferrer">Чинний сайт ліцею</a></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Великогрибовицький ліцей · Демонстраційний прототип, не офіційний запущений сайт</span><span>Створено з турботою про шкільну спільноту ♥</span></div>
+  </div>
+</footer>

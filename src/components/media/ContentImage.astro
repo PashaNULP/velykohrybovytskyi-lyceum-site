@@ -1,0 +1,38 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  class?: string;
+  loading?: 'eager' | 'lazy';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  sizes?: string;
+}
+
+const {
+  src,
+  alt,
+  class: className,
+  loading = 'lazy',
+  fetchpriority = 'auto',
+  sizes = '(max-width: 700px) 100vw, 50vw',
+} = Astro.props;
+const isGoogleArchive = src.includes('googleusercontent.com') && /=w\d+$/.test(src);
+const srcset = isGoogleArchive
+  ? [480, 800, 1280].map((width) => `${src.replace(/=w\d+$/, `=w${width}`)} ${width}w`).join(', ')
+  : undefined;
+---
+
+<img
+  class={className}
+  src={src}
+  srcset={srcset}
+  sizes={srcset ? sizes : undefined}
+  alt={alt}
+  width="1280"
+  height="853"
+  loading={loading}
+  decoding="async"
+  fetchpriority={fetchpriority}
+  referrerpolicy="no-referrer"
+  data-fallback-image
+/>

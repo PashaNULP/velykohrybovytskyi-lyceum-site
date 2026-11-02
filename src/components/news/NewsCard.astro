@@ -1,0 +1,30 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from '../ui/Icon.astro';
+import ContentImage from '../media/ContentImage.astro';
+import { formatDate } from '../../lib/content';
+
+interface Props { item: CollectionEntry<'news'> }
+const { item } = Astro.props;
+const visuals: Record<string, { art: string; symbol: string }> = {
+  Події: { art: 'music', symbol: '✳' },
+  Навчання: { art: 'learning', symbol: '✦' },
+  Спільнота: { art: 'community', symbol: '✻' },
+  Досягнення: { art: 'achievement', symbol: '✧' },
+};
+const visual = visuals[item.data.category];
+---
+
+<article class="news-card" data-news-card data-category={item.data.category} data-year={item.data.publishedAt.getFullYear()}>
+  <div class:list={['card-visual', `visual-${visual.art}`]} role="group" aria-label="Світлина з чинного сайту або резервна ілюстрація">
+    <span class="watermark" aria-hidden="true">{visual.symbol}</span>
+    <ContentImage class="school-photo" src={item.data.cover.src} alt={item.data.cover.alt} sizes="(max-width: 700px) 100vw, 33vw" />
+    <span class="art-caption">Архів ліцею</span>
+  </div>
+  <div class="news-body">
+    <span class="news-category">{item.data.category} · {formatDate(item.data.publishedAt)}</span>
+    <h3>{item.data.title}</h3>
+    <p>{item.data.summary}</p>
+    <a class="news-read" href={`/novyny/${item.data.slug}/`}>Читати новину <Icon name="arrow-right" /></a>
+  </div>
+</article>

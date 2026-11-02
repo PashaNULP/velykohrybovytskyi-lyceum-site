@@ -1,0 +1,17 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import InnerHeader from '../../../components/ui/InnerHeader.astro';
+import NewsCard from '../../../components/news/NewsCard.astro';
+import { getPublishedNews } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const entries = await getPublishedNews();
+  const years = [...new Set(entries.map(item => item.data.publishedAt.getFullYear()))];
+  return years.map(year => ({ params: { year: String(year) }, props: { year, entries: entries.filter(item => item.data.publishedAt.getFullYear() === year) } }));
+}
+
+interface Props { year: number; entries: CollectionEntry<'news'>[] }
+const { year, entries } = Astro.props;
+---
+<BaseLayout title={`Архів новин за ${year} рік · Великогрибовицький ліцей`} description={`Опубліковані новини Великогрибовицького ліцею за ${year} рік.`}><InnerHeader title={`Новини за ${year} рік`} description="Архів опублікованих матеріалів ліцею, відсортованих від нових до старих." /><section class="content-section"><div class="container"><a class="article-back" href="/novyny/">← Усі новини</a><div class="wide-news archive-grid">{entries.map(item => <NewsCard item={item} />)}</div></div></section></BaseLayout>
