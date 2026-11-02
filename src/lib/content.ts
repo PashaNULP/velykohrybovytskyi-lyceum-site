@@ -12,8 +12,8 @@ function assertUniqueSlugs<T extends WithSlug>(entries: T[], collectionName: str
   }
 }
 
-export async function getPublishedNews(): Promise<CollectionEntry<'news'>[]> {
-  const entries = await getCollection('news', ({ data }) => data.status === 'published');
+export async function getPublishedNews(now = new Date()): Promise<CollectionEntry<'news'>[]> {
+  const entries = await getCollection('news', ({ data }) => data.status === 'published' && data.publishedAt <= now);
   assertUniqueSlugs(entries, 'news');
   return entries.sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 }
@@ -21,7 +21,7 @@ export async function getPublishedNews(): Promise<CollectionEntry<'news'>[]> {
 export async function getPublishedDocuments(): Promise<CollectionEntry<'documents'>[]> {
   const entries = await getCollection('documents', ({ data }) => data.status === 'published');
   assertUniqueSlugs(entries, 'documents');
-  return entries.sort((a, b) => b.data.documentDate.valueOf() - a.data.documentDate.valueOf());
+  return entries.sort((a, b) => (b.data.documentDate?.valueOf() ?? 0) - (a.data.documentDate?.valueOf() ?? 0));
 }
 
 export async function getActiveAnnouncements(now = new Date()): Promise<CollectionEntry<'announcements'>[]> {
@@ -33,10 +33,22 @@ export async function getActiveAnnouncements(now = new Date()): Promise<Collecti
   return entries.sort((a, b) => Number(b.data.important) - Number(a.data.important) || b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 }
 
+export async function getPublishedAnnouncements(now = new Date()): Promise<CollectionEntry<'announcements'>[]> {
+  const entries = await getCollection(
+    'announcements',
+    ({ data }) => data.status === 'published' && data.publishedAt <= now,
+  );
+  assertUniqueSlugs(entries, 'announcements');
+  return entries.sort(
+    (a, b) => Number(b.data.important) - Number(a.data.important)
+      || b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf(),
+  );
+}
+
 export async function getPublishedGalleries(): Promise<CollectionEntry<'galleries'>[]> {
   const entries = await getCollection('galleries', ({ data }) => data.status === 'published');
   assertUniqueSlugs(entries, 'galleries');
-  return entries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  return entries.sort((a, b) => (b.data.date?.valueOf() ?? 0) - (a.data.date?.valueOf() ?? 0));
 }
 
 export const formatDate = (date: Date) => new Intl.DateTimeFormat('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' }).format(date);

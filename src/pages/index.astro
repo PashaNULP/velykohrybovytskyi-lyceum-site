@@ -6,13 +6,16 @@ import NewsCard from '../components/news/NewsCard.astro';
 import Icon from '../components/ui/Icon.astro';
 import ContentImage from '../components/media/ContentImage.astro';
 import { render } from 'astro:content';
-import { schoolPhotos } from '../data/photos';
 import { getActiveAnnouncements, getPublishedGalleries, getPublishedNews } from '../lib/content';
 const news = await getPublishedNews();
+const homepageNews = [...news]
+  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf())
+  .slice(0, 3);
 const announcements = await getActiveAnnouncements();
 const announcementViews = await Promise.all(announcements.map(async (entry) => ({ entry, Content: (await render(entry)).Content })));
 const galleries = await getPublishedGalleries();
 const featuredGallery = galleries[0];
+const homePhotos = galleries.flatMap(({ data }) => data.photos).slice(0, 6);
 ---
 
 <BaseLayout title="Великогрибовицький ліцей" description="Офіційний сайт Великогрибовицького ліцею Львівської міської ради">
@@ -21,14 +24,14 @@ const featuredGallery = galleries[0];
   <section class="news-section" aria-labelledby="latest-news-title">
     <div class="container">
       <div class="section-top"><div><span class="eyebrow">Життя ліцею</span><h2 class="section-title" id="latest-news-title">Події, що залишають слід</h2><p class="section-sub">Ділимося моментами, досягненнями й історіями нашої шкільної спільноти.</p></div><a class="text-link" href="/novyny/">Усі новини <Icon name="arrow-right" /></a></div>
-      <div class="news-grid">{news.slice(0, 3).map((item) => <NewsCard item={item} />)}</div>
+      <div class="news-grid">{homepageNews.map((item) => <NewsCard item={item} />)}</div>
     </div>
   </section>
   <section class="photo-gallery-section" aria-labelledby="gallery-title">
     <div class="container">
       <div class="section-top"><div><span class="eyebrow">Обличчя нашого ліцею</span><h2 class="section-title" id="gallery-title">Життя у світлинах</h2><p class="section-sub">Події, зустрічі та щоденні моменти з життя нашої ліцейної спільноти.</p></div><a class="text-link" href="/halerei/">Усі фотогалереї <Icon name="arrow-right" /></a></div>
-      <div class="school-gallery">
-        {schoolPhotos.map((photo) => <div class="gallery-shot"><div class="gallery-fallback"><Icon name="book" /><span>Фото ліцею</span></div><ContentImage class="gallery-photo" src={photo.src} alt={photo.alt} sizes="(max-width: 700px) 50vw, 33vw" /></div>)}
+      <div class:list={['school-gallery', { 'school-gallery-four': homePhotos.length === 4 }]}>
+        {homePhotos.map((photo) => <div class="gallery-shot"><div class="gallery-fallback"><Icon name="book" /><span>Фото ліцею</span></div><ContentImage class="gallery-photo" src={photo.src} alt={photo.alt} sizes="(max-width: 700px) 50vw, 33vw" /></div>)}
       </div>
       {featuredGallery && <a class="text-link gallery-collection-link" href={`/halerei/${featuredGallery.data.slug}/`}>Відкрити фотогалерею <Icon name="arrow-right" /></a>}
     </div>
@@ -39,5 +42,5 @@ const featuredGallery = galleries[0];
       <div class="feature-copy"><span class="eyebrow">Наше середовище</span><h2 class="section-title">Школа, у якій хочеться бути</h2><p>Для нас важливо, щоб освіта була не лише про підручники, а й про довіру, цікавість, самостійність і щоденні відкриття. Ми цінуємо кожного, хто є частиною нашої ліцейної родини.</p><div class="checks"><span class="check"><Icon name="check" /> Турбота й підтримка</span><span class="check"><Icon name="check" /> Простір для творчості</span><span class="check"><Icon name="check" /> Цікаві проєкти</span><span class="check"><Icon name="check" /> Сильна спільнота</span></div><a class="btn btn-dark" href="/pro-litsei/">Дізнатися більше <Icon name="arrow-up-right" /></a></div>
     </div>
   </section>
-  <section class="notice-section" aria-labelledby="announcements-title"><div class="container"><div class="notice-card"><div class="notice-content"><span class="eyebrow">Актуальні оголошення</span><h2 id="announcements-title">Важливе для ліцейної спільноти</h2>{announcementViews.length ? <div class="announcement-list">{announcementViews.map(({ entry, Content }) => <article class:list={['announcement-item', { important: entry.data.important }]}><h3>{entry.data.title}</h3><div class="announcement-body"><Content /></div></article>)}</div> : <p>Актуальних оголошень наразі немає.</p>}</div><a href="/kontakty/" class="btn btn-sun">Наші контакти <Icon name="arrow-up-right" /></a></div></div></section>
+  <section class="notice-section" aria-labelledby="announcements-title"><div class="container"><div class="notice-card"><div class="notice-content"><span class="eyebrow">Актуальні оголошення</span><h2 id="announcements-title">Важливе для ліцейної спільноти</h2>{announcementViews.length ? <div class="announcement-list">{announcementViews.map(({ entry, Content }) => <article class:list={['announcement-item', { important: entry.data.important }]}><h3>{entry.data.title}</h3><div class="announcement-body"><Content /></div></article>)}</div> : <p>Актуальних оголошень наразі немає. Попередні повідомлення збережено в архіві.</p>}</div><a href="/oholoshennia/" class="btn btn-sun">Усі оголошення <Icon name="arrow-up-right" /></a></div></div></section>
 </BaseLayout>

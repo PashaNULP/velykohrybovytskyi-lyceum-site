@@ -16,10 +16,10 @@ const visual = visuals[item.data.category];
 ---
 
 <article class="news-card" data-news-card data-category={item.data.category} data-year={item.data.publishedAt.getFullYear()}>
-  <div class:list={['card-visual', `visual-${visual.art}`]} role="group" aria-label="Світлина з чинного сайту або резервна ілюстрація">
+  <div class:list={['card-visual', `visual-${visual.art}`]} role="group" aria-label={item.data.cover ? 'Світлина події' : 'Ілюстрація категорії новини'}>
     <span class="watermark" aria-hidden="true">{visual.symbol}</span>
-    <ContentImage class="school-photo" src={item.data.cover.src} alt={item.data.cover.alt} sizes="(max-width: 700px) 100vw, 33vw" />
-    <span class="art-caption">Архів ліцею</span>
+    {item.data.cover && <ContentImage class="school-photo" src={item.data.cover.src} alt={item.data.cover.alt} sizes="(max-width: 700px) 100vw, 33vw" />}
+    {item.data.cover && <span class="art-caption">Світлина події</span>}
   </div>
   <div class="news-body">
     <span class="news-category">{item.data.category} · {formatDate(item.data.publishedAt)}</span>

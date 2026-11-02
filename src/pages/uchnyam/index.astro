@@ -2,6 +2,18 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import InnerHeader from '../../components/ui/InnerHeader.astro';
 import Icon from '../../components/ui/Icon.astro';
-const cards = [{icon:'book',title:'Навчальні матеріали',text:'Корисні посилання, навчальні платформи та матеріали для самостійної роботи.'},{icon:'calendar',title:'Розклад уроків',text:'Навчальний розклад і важлива інформація про організацію освітнього процесу.'},{icon:'users',title:'Учнівське самоврядування',text:'Ініціативи, проєкти та можливості впливати на життя ліцею.'},{icon:'star',title:'Наші можливості',text:'Олімпіади, конкурси, творчі заходи й цікаві події.'}] as const;
+
+const cards = [
+  { icon: 'book', title: 'Освітні програми', text: 'Програми для 1–4, 5–8 та 9–11 класів, за якими організовано навчання у поточному навчальному році.', href: '/dokumenty/', link: 'Відкрити документи' },
+  { icon: 'calendar', title: 'Організація навчання', text: 'Режим роботи ліцею та інші актуальні матеріали про освітній процес зібрано в одному каталозі.', href: '/dokumenty/', link: 'Режим і документи' },
+  { icon: 'users', title: 'Учнівське самоврядування', text: 'Можливість пропонувати ідеї, брати відповідальність і долучатися до рішень, важливих для ліцейної спільноти.', href: '/novyny/', link: 'Ініціативи учнів' },
+  { icon: 'star', title: 'Події та можливості', text: 'Творчі проєкти, спортивні змагання, поїздки, табори, конкурси та інші події ліцею.', href: '/novyny/', link: 'Переглянути новини' },
+  { icon: 'check', title: 'Безпечне середовище', text: 'Матеріали про безпечну поведінку, протидію булінгу та відповідальне користування інтернетом.', href: '/dokumenty/', link: 'Правила та безпека' },
+  { icon: 'phone', title: 'Потрібна допомога?', text: 'Якщо потрібне уточнення щодо навчання або організаційних питань, зверніться до ліцею офіційним телефоном.', href: '/kontakty/', link: 'Зв’язатися з ліцеєм' },
+] as const;
 ---
-<BaseLayout title="Учням · Великогрибовицький ліцей"><InnerHeader title="Учням" description="Корисна інформація, навчальні ресурси та можливості для розвитку." /><section class="content-section"><div class="container"><div class="content-grid">{cards.map(card => <article class="info-card"><span class="card-icon"><Icon name={card.icon} /></span><h2>{card.title}</h2><p>{card.text}</p></article>)}</div></div></section></BaseLayout>
+
+<BaseLayout title="Учням · Великогрибовицький ліцей" description="Освітні матеріали, документи, події та корисна інформація для учнів Великогрибовицького ліцею.">
+  <InnerHeader title="Учням" description="Навчання, ініціативи, безпека та можливості для розвитку." />
+  <section class="content-section"><div class="container page-flow"><div class="intro-copy"><span class="eyebrow">Корисне в одному місці</span><h2 class="section-title">Навчайся й долучайся</h2><p class="section-sub">Тут зібрано основні матеріали, які допомагають орієнтуватися в освітньому процесі та житті ліцею.</p></div><div class="content-grid">{cards.map((card) => <article class="info-card"><span class="card-icon"><Icon name={card.icon} /></span><h2>{card.title}</h2><p>{card.text}</p><a class="text-link" href={card.href}>{card.link} <Icon name="arrow-right" /></a></article>)}</div></div></section>
+</BaseLayout>

@@ -32,6 +32,11 @@ const mediaPath = z
     'Зображення повинно мати локальний шлях від / або повну HTTPS-адресу.',
   );
 
+const sourceUrl = z
+  .url({ error: 'Посилання на першоджерело має бути коректною URL-адресою.' })
+  .refine((value) => value.startsWith('https://'), 'Використовуйте захищене HTTPS-посилання.')
+  .optional();
+
 const photo = z.object({
   src: mediaPath,
   alt: z.string({ error: 'Додайте альтернативний опис фотографії.' }).min(5, 'Alt-текст має бути змістовним.'),
@@ -48,12 +53,17 @@ const news = defineCollection({
       error: 'Оберіть одну з дозволених категорій новин.',
     }),
     summary: z.string({ error: 'Додайте короткий опис новини.' }).min(20).max(360),
-    cover: photo,
+    cover: photo.optional(),
     gallery: z.array(photo).max(30, 'Одна новина може містити максимум 30 фотографій.').default([]),
     status,
     featured: z.boolean().default(false),
     seoTitle: z.string().max(70, 'SEO-заголовок має містити не більше 70 символів.').optional(),
     seoDescription: z.string().max(170, 'SEO-опис має містити не більше 170 символів.').optional(),
+    sourceUrl,
+  }).superRefine((data, context) => {
+    if (data.status === 'published' && !data.sourceUrl) {
+      context.addIssue({ code: 'custom', path: ['sourceUrl'], message: 'Перед публікацією додайте офіційне першоджерело.' });
+    }
   }),
 });
 
@@ -71,18 +81,26 @@ const documents = defineCollection({
     .object({
       title: z.string({ error: 'Додайте назву документа.' }).min(5).max(180),
       slug,
-      category: z.enum(['Установчі документи', 'Освітній процес', 'Для батьків', 'Звіти'], {
+      category: z.enum(['Установчі документи', 'Освітній процес', 'Для батьків', 'Звіти', 'Безпека та правила'], {
         error: 'Оберіть одну з дозволених категорій документів.',
       }),
-      documentDate: z.coerce.date({ error: 'Додайте коректну дату документа.' }),
+      documentDate: optionalDate,
       summary: z.string({ error: 'Додайте короткий опис документа.' }).min(10).max(360),
       pdf: documentPdf.optional(),
+      externalUrl: sourceUrl,
       status,
       academicYear: optionalAcademicYear,
+      sourceUrl,
     })
     .superRefine((data, context) => {
-      if (data.status === 'published' && !data.pdf) {
-        context.addIssue({ code: 'custom', path: ['pdf'], message: 'Для публікації документа обов’язково завантажте PDF-файл.' });
+      if (data.status === 'published' && !data.pdf && !data.externalUrl) {
+        context.addIssue({ code: 'custom', path: ['pdf'], message: 'Для публікації додайте локальний PDF або офіційне зовнішнє посилання.' });
+      }
+      if (data.status === 'published' && !data.documentDate) {
+        context.addIssue({ code: 'custom', path: ['documentDate'], message: 'Перед публікацією підтвердьте дату документа.' });
+      }
+      if (data.status === 'published' && !data.sourceUrl) {
+        context.addIssue({ code: 'custom', path: ['sourceUrl'], message: 'Перед публікацією додайте сторінку-першоджерело.' });
       }
     }),
 });
@@ -97,10 +115,15 @@ const announcements = defineCollection({
       expiresAt: optionalDate,
       status,
       important: z.boolean().default(false),
+      sourceUrl,
     })
-    .refine((data) => !data.expiresAt || data.expiresAt >= data.publishedAt, {
-      message: 'Дата завершення актуальності не може бути раніше дати публікації.',
-      path: ['expiresAt'],
+    .superRefine((data, context) => {
+      if (data.expiresAt && data.expiresAt < data.publishedAt) {
+        context.addIssue({ code: 'custom', path: ['expiresAt'], message: 'Дата завершення актуальності не може бути раніше дати публікації.' });
+      }
+      if (data.status === 'published' && !data.sourceUrl) {
+        context.addIssue({ code: 'custom', path: ['sourceUrl'], message: 'Перед публікацією додайте офіційне першоджерело.' });
+      }
     }),
 });
 
@@ -109,11 +132,19 @@ const galleries = defineCollection({
   schema: z.object({
     title: z.string({ error: 'Додайте назву фотогалереї.' }).min(5).max(140),
     slug,
-    date: z.coerce.date({ error: 'Додайте коректну дату галереї.' }),
+    date: optionalDate,
     description: z.string({ error: 'Додайте опис галереї.' }).min(20).max(500),
     cover: photo,
     photos: z.array(photo).min(1, 'Додайте щонайменше одну фотографію.').max(60),
     status,
+    sourceUrl,
+  }).superRefine((data, context) => {
+    if (data.status === 'published' && !data.date) {
+      context.addIssue({ code: 'custom', path: ['date'], message: 'Перед публікацією підтвердьте дату галереї.' });
+    }
+    if (data.status === 'published' && !data.sourceUrl) {
+      context.addIssue({ code: 'custom', path: ['sourceUrl'], message: 'Перед публікацією додайте офіційне першоджерело.' });
+    }
   }),
 });
 

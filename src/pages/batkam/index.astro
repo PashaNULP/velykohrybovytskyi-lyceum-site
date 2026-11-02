@@ -2,6 +2,18 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import InnerHeader from '../../components/ui/InnerHeader.astro';
 import Icon from '../../components/ui/Icon.astro';
-const cards = [{icon:'users',title:'Вступ до ліцею',text:'Інформація щодо прийому, необхідних документів та відповідей на часті запитання.'},{icon:'calendar',title:'Оголошення для батьків',text:'Організаційні повідомлення, важливі дати й інші актуальні питання.'},{icon:'file',title:'Документи та правила',text:'Правила внутрішнього розпорядку, освітні програми та інша важлива інформація.'},{icon:'phone',title:'Зв’язок із ліцеєм',text:'Адреса й телефон для уточнення організаційних питань.'}] as const;
+
+const cards = [
+  { icon: 'users', title: 'Зарахування до ліцею', text: 'Перелік документів і порядок зарахування можуть змінюватися. Щоб отримати чинну інформацію для конкретного класу, зверніться безпосередньо до ліцею.', href: '/kontakty/', link: 'Уточнити інформацію' },
+  { icon: 'calendar', title: 'Режим роботи', text: 'Організація навчального року, режим роботи та освітні програми оприлюднені в каталозі документів.', href: '/dokumenty/', link: 'Переглянути документи' },
+  { icon: 'file', title: 'Офіційні матеріали', text: 'Статут, витяг із ЄДР, звіти, освітні програми та правила доступні для перегляду й завантаження.', href: '/dokumenty/', link: 'Каталог документів' },
+  { icon: 'check', title: 'Безпека дитини', text: 'Окремий розділ документів містить матеріали щодо протидії булінгу, правил реагування та безпечного освітнього середовища.', href: '/dokumenty/', link: 'Безпека та правила' },
+  { icon: 'star', title: 'Новини й оголошення', text: 'Стежте за подіями ліцею, досягненнями учнів та актуальними організаційними повідомленнями.', href: '/oholoshennia/', link: 'Усі оголошення' },
+  { icon: 'phone', title: 'Зв’язок із ліцеєм', text: 'Адреса, офіційний телефон і посилання на карту доступні на сторінці контактів.', href: '/kontakty/', link: 'Контакти ліцею' },
+] as const;
 ---
-<BaseLayout title="Батькам · Великогрибовицький ліцей"><InnerHeader title="Батькам" description="Важливі матеріали для родин і майбутніх учнів ліцею." /><section class="content-section"><div class="container"><div class="content-grid">{cards.map(card => <article class="info-card"><span class="card-icon"><Icon name={card.icon} /></span><h2>{card.title}</h2><p>{card.text}</p></article>)}</div></div></section></BaseLayout>
+
+<BaseLayout title="Батькам · Великогрибовицький ліцей" description="Документи, оголошення, контакти та актуальна інформація для батьків учнів Великогрибовицького ліцею.">
+  <InnerHeader title="Батькам" description="Актуальна інформація для родин учнів і тих, хто планує вступ до ліцею." />
+  <section class="content-section"><div class="container page-flow"><div class="intro-copy"><span class="eyebrow">Партнерство заради дитини</span><h2 class="section-title">Основне для батьків</h2><p class="section-sub">Офіційні матеріали, організаційна інформація та прямий зв’язок із ліцеєм без застарілих переліків і неперевірених вимог.</p></div><div class="content-grid">{cards.map((card) => <article class="info-card"><span class="card-icon"><Icon name={card.icon} /></span><h2>{card.title}</h2><p>{card.text}</p><a class="text-link" href={card.href}>{card.link} <Icon name="arrow-right" /></a></article>)}</div></div></section>
+</BaseLayout>

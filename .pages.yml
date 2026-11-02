@@ -19,7 +19,7 @@ components:
     label: Статус
     required: true
     default: draft
-    description: Лише статус «Опубліковано» робить матеріал видимим на сайті. Файл чернетки все одно зберігається у приватному репозиторії.
+    description: Лише статус «Опубліковано» робить матеріал видимим на сайті. Репозиторій публічний, тому чернетки не повинні містити непублічних даних.
     options:
       values:
         - name: draft
@@ -83,6 +83,7 @@ content:
         label: Дата публікації
         type: date
         required: true
+        description: Матеріал із майбутньою датою не з’явиться на сайті до настання цієї дати.
         options:
           format: yyyy-MM-dd
       - name: category
@@ -129,12 +130,17 @@ content:
         label: Показувати серед останніх
         type: boolean
         default: false
+        description: Позначені матеріали отримують пріоритет у блоці новин на головній сторінці.
       - name: seoTitle
         label: SEO-заголовок
         type: string
       - name: seoDescription
         label: SEO-опис
         type: text
+      - name: sourceUrl
+        label: Першоджерело
+        type: string
+        description: HTTPS-посилання на офіційну публікацію, з якої підготовлено матеріал.
       - name: body
         label: Текст новини
         type: rich-text
@@ -172,11 +178,11 @@ content:
         type: select
         required: true
         options:
-          values: [Установчі документи, Освітній процес, Для батьків, Звіти]
+          values: [Установчі документи, Освітній процес, Для батьків, Звіти, Безпека та правила]
       - name: documentDate
         label: Дата документа
         type: date
-        required: true
+        description: Обов’язково підтвердьте дату перед публікацією. Не використовуйте дату завантаження.
         options:
           format: yyyy-MM-dd
       - name: summary
@@ -186,16 +192,24 @@ content:
       - name: pdf
         label: PDF-файл
         type: file
-        description: Обов’язковий перед зміною статусу на «Опубліковано».
+        description: Для невеликих файлів. Якщо документ завеликий для CMS, використайте офіційне зовнішнє посилання нижче.
         options:
           media: documents
           extensions: [pdf]
+      - name: externalUrl
+        label: Офіційне зовнішнє посилання
+        type: string
+        description: Для великих файлів на офіційному Google Drive. Для публікації потрібен PDF або це посилання.
       - name: status
         component: status
       - name: academicYear
         label: Навчальний рік
         type: string
         description: "Наприклад: 2026–2027"
+      - name: sourceUrl
+        label: Сторінка-першоджерело
+        type: string
+        description: Сторінка старого офіційного сайту, де оприлюднено документ.
       - name: body
         label: Примітки
         type: rich-text
@@ -245,6 +259,10 @@ content:
         label: Важливе оголошення
         type: boolean
         default: false
+      - name: sourceUrl
+        label: Першоджерело
+        type: string
+        description: HTTPS-посилання на офіційне оголошення.
       - name: body
         label: Текст оголошення
         type: rich-text
@@ -280,7 +298,7 @@ content:
       - name: date
         label: Дата
         type: date
-        required: true
+        description: Обов’язково підтвердьте дату перед публікацією.
         options:
           format: yyyy-MM-dd
       - name: description
@@ -316,6 +334,10 @@ content:
             type: string
       - name: status
         component: status
+      - name: sourceUrl
+        label: Першоджерело
+        type: string
+        description: HTTPS-посилання на офіційну публікацію або фотозвіт.
       - name: body
         label: Додатковий текст
         type: rich-text

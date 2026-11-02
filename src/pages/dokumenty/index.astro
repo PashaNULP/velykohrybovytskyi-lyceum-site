@@ -34,20 +34,24 @@ const categories = [...new Set(documents.map((item) => item.data.category))];
           </div>
           <p class="filter-status" id="doc-filter-status" aria-live="polite">Показано документів: {documents.length}</p>
           <div class="doc-list" id="doc-results">
-            {documents.map(({ data }) => (
+            {documents.map(({ data }) => {
+              const documentUrl = data.pdf ?? data.externalUrl!;
+              const isLocalPdf = Boolean(data.pdf);
+              return (
               <article class="doc-item" data-doc-item data-category={data.category} data-title={data.title.toLocaleLowerCase('uk')}>
                 <span class="doc-symbol"><Icon name="file" /></span>
                 <span class="doc-meta">
                   <strong>{data.title}</strong>
-                  <small>{data.category} · {formatDate(data.documentDate)}{data.academicYear ? ` · ${data.academicYear} н. р.` : ''}</small>
+                  <small>{data.category}{data.documentDate ? ` · ${formatDate(data.documentDate)}` : ''}{data.academicYear ? ` · ${data.academicYear} н. р.` : ''}</small>
                   <span class="doc-summary">{data.summary}</span>
                 </span>
                 <span class="doc-actions">
-                  <a class="btn btn-outline" href={data.pdf!} target="_blank" rel="noopener">Переглянути</a>
-                  <a class="btn btn-dark" href={data.pdf!} download>Завантажити</a>
+                  <a class="btn btn-outline" href={documentUrl} target="_blank" rel="noopener noreferrer">Переглянути</a>
+                  {isLocalPdf ? <a class="btn btn-dark" href={documentUrl} download>Завантажити</a> : <a class="btn btn-dark" href={documentUrl} target="_blank" rel="noopener noreferrer">Офіційне джерело</a>}
                 </span>
               </article>
-            ))}
+              );
+            })}
           </div>
           <div class="empty" id="doc-empty" hidden>За цим запитом документів не знайдено.</div>
         </>
