@@ -4,6 +4,9 @@ slug: adventure-camp-den-druhyi
 publishedAt: 2026-06-09
 category: Події
 summary: "Учасники літньої школи створювали солодкі букети, грали в доджбол, розмальовували шопери та відвідали Шевченківський гай."
+cover:
+  src: "/media/images/news/2026-06-09-adventure-day-2.jpg"
+  alt: "Учасники другого дня літньої школи Adventure Camp"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

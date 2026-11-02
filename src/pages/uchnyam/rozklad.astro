@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InnerHeader from '../../components/ui/InnerHeader.astro';
+import Icon from '../../components/ui/Icon.astro';
+
+const schedules = [
+  { title: '5–11 класи', note: 'Перед першим уроком може проводитися нульовий урок.', lessons: [['0', '08:10', '08:55'], ['1', '09:00', '09:45'], ['2', '09:55', '10:40'], ['3', '11:00', '11:45'], ['4', '12:05', '12:50'], ['5', '13:00', '13:45'], ['6', '13:55', '14:40'], ['7', '14:50', '15:35'], ['8', '15:45', '16:30']] },
+  { title: '1 клас', note: 'Тривалість уроку — 35 хвилин.', lessons: [['1', '09:00', '09:35'], ['2', '09:45', '10:20'], ['3', '10:40', '11:15'], ['4', '11:45', '12:20'], ['5', '12:30', '13:05']] },
+  { title: '2–4 класи', note: 'Тривалість уроку — 40 хвилин.', lessons: [['1', '09:00', '09:40'], ['2', '09:50', '10:30'], ['3', '10:50', '11:30'], ['4', '12:00', '12:40'], ['5', '12:50', '13:30'], ['6', '13:45', '14:25']] },
+] as const;
+---
+
+<BaseLayout title="Розклад дзвінків · Великогрибовицький ліцей" description="Розклад дзвінків Великогрибовицького ліцею на 2026–2027 навчальний рік.">
+  <InnerHeader title="Розклад дзвінків" description="Час уроків для 1–11 класів у 2026–2027 навчальному році." />
+  <section class="content-section"><div class="container schedule-page">
+    <div class="schedule-notice"><Icon name="calendar" /><div><strong>Актуально на 2026–2027 навчальний рік</strong><p>Розклад укладено за затвердженим режимом роботи ліцею від 26 серпня 2026 року.</p></div><a class="text-link" href="/dokumenty/#rezhym-roboty-litseiu-2026-2027">Режим роботи <Icon name="arrow-right" /></a></div>
+    <div class="schedule-grid">{schedules.map((schedule, index) => <article class:list={['schedule-card', { primary: index === 0 }]}><header><span class="eyebrow">Навчальні заняття</span><h2>{schedule.title}</h2><p>{schedule.note}</p></header><div class="lesson-table" role="table" aria-label={`Розклад дзвінків для ${schedule.title}`}><div class="lesson-row lesson-head" role="row"><span role="columnheader">Урок</span><span role="columnheader">Початок</span><span role="columnheader">Кінець</span></div>{schedule.lessons.map(([number, start, end]) => <div class="lesson-row" role="row"><strong role="cell">{number}</strong><time role="cell">{start}</time><time role="cell">{end}</time></div>)}</div></article>)}</div>
+  </div></section>
+</BaseLayout>

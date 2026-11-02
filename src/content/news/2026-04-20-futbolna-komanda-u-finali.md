@@ -4,6 +4,9 @@ slug: futbolna-komanda-u-finali-lvova
 publishedAt: 2026-04-20
 category: Досягнення
 summary: "Дві перемоги у півфінальній стадії забезпечили команді Великогрибовицького ліцею місце у фіналі з масового футболу."
+cover:
+  src: "/media/images/news/2026-04-20-football-final.jpg"
+  alt: "Футбольна команда Великогрибовицького ліцею"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

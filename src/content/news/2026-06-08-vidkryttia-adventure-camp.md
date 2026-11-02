@@ -4,6 +4,9 @@ slug: vidkryttia-adventure-camp-2026
 publishedAt: 2026-06-08
 category: Події
 summary: "Перший день табору був присвячений знайомству, формуванню команд і створенню власних назв, девізів та прапорів."
+cover:
+  src: "/media/images/news/2026-06-08-adventure-opening.jpg"
+  alt: "Відкриття літньої школи Adventure Camp у ліцеї"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

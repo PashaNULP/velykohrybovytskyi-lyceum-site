@@ -4,6 +4,9 @@ slug: uatefl-reunion-conference-2026
 publishedAt: 2026-08-12
 category: Навчання
 summary: "Жанна Блажівська долучилася до професійної конференції викладачів англійської мови UATEFL Reunion Conference у Львові."
+cover:
+  src: "/media/images/news/2026-08-12-uatefl.jpg"
+  alt: "Представниця ліцею на конференції UATEFL у Львові"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

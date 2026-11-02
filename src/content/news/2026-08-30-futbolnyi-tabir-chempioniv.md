@@ -4,6 +4,9 @@ slug: futbolnyi-tabir-chempioniv
 publishedAt: 2026-08-30
 category: Досягнення
 summary: "Команда ліцею, яка стала чемпіоном Львова з масового футболу, провела насичений тиждень у таборі «Пліч-о-пліч 2026 | Львів»."
+cover:
+  src: "/media/images/news/2026-08-30-futbolnyi-tabir.jpg"
+  alt: "Команда Великогрибовицького ліцею на спортивному таборі шкільної ліги"
 status: published
 featured: true
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

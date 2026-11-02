@@ -4,6 +4,9 @@ slug: den-bezpechnoho-internetu-2026
 publishedAt: 2026-02-10
 category: Навчання
 summary: "Учні обговорювали захист персональних даних, фішинг, кібербулінг, фейки та відповідальну поведінку в цифровому середовищі."
+cover:
+  src: "/media/images/news/2026-02-10-safe-internet.jpg"
+  alt: "Заняття з безпечної поведінки учнів у цифровому середовищі"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

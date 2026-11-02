@@ -4,6 +4,9 @@ slug: osobyste-portfolio-decide
 publishedAt: 2026-05-12
 category: Навчання
 summary: "Кар’єрний радник провів заняття про представлення навчальних досягнень, проєктів, волонтерського досвіду та навичок."
+cover:
+  src: "/media/images/news/2026-05-12-portfolio.jpg"
+  alt: "Восьмикласники під час заняття зі створення особистого портфоліо"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"
