@@ -5,7 +5,6 @@ export const site = {
   address: 'с. Великі Грибовичі, вул. Стуса, 1а',
   phone: '+380 97 813 88 27',
   phoneHref: 'tel:+380978138827',
-  currentSite: 'https://www.hrybovychi-school.com.ua/',
 } as const;
 
 export const navigation = [

@@ -39,7 +39,6 @@ const robots = isPublicProduction ? 'index,follow' : 'noindex,nofollow,noarchive
     <Header currentPath={Astro.url.pathname} />
     <main id="main-content"><slot /></main>
     <Footer />
-    <div class="demo-banner"><strong>Прототип.</strong> Демонстраційний вміст; публікація та PDF поки не підключені.</div>
     <script>
       document.querySelectorAll<HTMLImageElement>('[data-fallback-image]').forEach((image) => {
         image.addEventListener('error', () => { image.hidden = true; });

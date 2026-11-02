@@ -8,7 +8,6 @@ import ContentImage from '../components/media/ContentImage.astro';
 import { render } from 'astro:content';
 import { schoolPhotos } from '../data/photos';
 import { getActiveAnnouncements, getPublishedGalleries, getPublishedNews } from '../lib/content';
-import { site } from '../data/site';
 const news = await getPublishedNews();
 const announcements = await getActiveAnnouncements();
 const announcementViews = await Promise.all(announcements.map(async (entry) => ({ entry, Content: (await render(entry)).Content })));
@@ -16,7 +15,7 @@ const galleries = await getPublishedGalleries();
 const featuredGallery = galleries[0];
 ---
 
-<BaseLayout title="Великогрибовицький ліцей — прототип нового сайту" description="Демонстраційний прототип нового сайту Великогрибовицького ліцею Львівської міської ради">
+<BaseLayout title="Великогрибовицький ліцей" description="Офіційний сайт Великогрибовицького ліцею Львівської міської ради">
   <Hero />
   <QuickLinks />
   <section class="news-section" aria-labelledby="latest-news-title">
@@ -27,11 +26,10 @@ const featuredGallery = galleries[0];
   </section>
   <section class="photo-gallery-section" aria-labelledby="gallery-title">
     <div class="container">
-      <div class="section-top"><div><span class="eyebrow">Обличчя нашого ліцею</span><h2 class="section-title" id="gallery-title">Життя у світлинах</h2><p class="section-sub">Справжні світлини, опубліковані на чинному сайті. Поки це демонстраційна добірка для презентації дизайну.</p></div><a class="text-link" href={site.currentSite} rel="noopener noreferrer" target="_blank">Джерело фотографій <Icon name="arrow-up-right" /></a></div>
+      <div class="section-top"><div><span class="eyebrow">Обличчя нашого ліцею</span><h2 class="section-title" id="gallery-title">Життя у світлинах</h2><p class="section-sub">Події, зустрічі та щоденні моменти з життя нашої ліцейної спільноти.</p></div><a class="text-link" href="/halerei/">Усі фотогалереї <Icon name="arrow-right" /></a></div>
       <div class="school-gallery">
         {schoolPhotos.map((src, index) => <div class="gallery-shot"><div class="gallery-fallback"><Icon name="book" /><span>Фото з архіву ліцею</span></div><ContentImage class="gallery-photo" src={src} alt={`Архівна світлина Великогрибовицького ліцею, фото ${index + 1}`} sizes="(max-width: 700px) 50vw, 33vw" /></div>)}
       </div>
-      <p class="gallery-note">Для відображення фото потрібен інтернет. Якщо Google обмежить пряме завантаження, залишаться резервні блоки; перед публікацією остаточного сайту отримаємо оригінальні файли з дозволу ліцею.</p>
       {featuredGallery && <a class="text-link gallery-collection-link" href={`/halerei/${featuredGallery.data.slug}/`}>Відкрити фотогалерею <Icon name="arrow-right" /></a>}
     </div>
   </section>

@@ -186,7 +186,7 @@ content:
       - name: pdf
         label: PDF-файл
         type: file
-        required: true
+        description: Обов’язковий перед зміною статусу на «Опубліковано».
         options:
           media: documents
           extensions: [pdf]

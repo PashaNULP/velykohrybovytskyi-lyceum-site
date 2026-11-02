@@ -6,13 +6,13 @@
   "scripts": {
     "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
     "start": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "prebuild": "node scripts/clean-dist.mjs",
     "build": "ASTRO_TELEMETRY_DISABLED=1 astro check && ASTRO_TELEMETRY_DISABLED=1 astro build",
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
     "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
     "verify": "npm run build && node scripts/verify-build.mjs",
     "audit:repo": "node scripts/audit-repository.mjs",
-    "test:editorial": "node scripts/test-editorial-workflow.mjs",
-    "create:demo-pdfs": "node scripts/create-demo-pdfs.mjs"
+    "test:editorial": "node scripts/test-editorial-workflow.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "4.0.19",

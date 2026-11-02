@@ -1,4 +1,4 @@
-import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
@@ -37,7 +37,7 @@ slug: test-editorial-document
 category: Звіти
 documentDate: 2026-11-02
 summary: "Демонстраційний PDF для автоматичної перевірки публікації документа."
-pdf: /files/demo/test-document-1.pdf
+pdf: /files/editorial-check.pdf
 status: ${status}
 academicYear: 2026–2027
 ---
@@ -64,6 +64,8 @@ try {
     filter: (path) => !['.git', '.astro', 'dist', 'node_modules'].includes(path.split('/').at(-1)),
   });
   symlinkSync(join(sourceRoot, 'node_modules'), join(testRoot, 'node_modules'), 'dir');
+  mkdirSync(join(testRoot, 'public/files'), { recursive: true });
+  writeFileSync(join(testRoot, 'public/files/editorial-check.pdf'), '%PDF-1.4\n% Editorial workflow check\n%%EOF\n');
 
   writeFileSync(newsPath, news('draft'));
   writeFileSync(documentPath, document('draft'));

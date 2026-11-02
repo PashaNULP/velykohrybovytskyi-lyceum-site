@@ -1,4 +1,4 @@
-// Тимчасові посилання на світлини з чинного Google Sites.
+// Архівні світлини Великогрибовицького ліцею.
 // Перед запуском їх потрібно замінити оригінальними файлами з підтвердженим дозволом.
 export const schoolPhotos = [
   'https://lh7-us.googleusercontent.com/sitesv-images-rt/AMxu72tMse4VVAkCo5mFHGic6jiIcp2jqWl6cRooLhAUfGXaJ8dzcyjwnYNSE7Hjyai0LHUvocFunbGPu7tgm3hg08OLfRMmAsVpDsLHKuLD4RGzwM3oAVmBI-kJke7yh2sLIrj2DXEqD9UXI38brPg5vuyRibzVlXaBfO7s-sB50FREl9O_RKLEstfoMjRtn13SlYzLquRLwU5cUw7o3g5x1Y0_MQuOFsIWuAbAw_Rm-v0=w1280',

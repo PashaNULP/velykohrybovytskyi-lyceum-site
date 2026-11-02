@@ -57,26 +57,34 @@ const news = defineCollection({
   }),
 });
 
+const documentPdf = z
+  .string({ error: 'Додайте шлях до PDF.' })
+  .regex(/^\/files\/[a-z0-9/_-]+\.pdf$/i, 'PDF повинен бути в /public/files і мати безпечну назву файла.')
+  .refine(
+    (value) => existsSync(join(process.cwd(), 'public', value.replace(/^\//, ''))),
+    'PDF-файл не знайдено в каталозі public. Перевірте шлях або завантажте файл.',
+  );
+
 const documents = defineCollection({
   loader: glob({ base: './src/content/documents', pattern: '**/*.md' }),
-  schema: z.object({
-    title: z.string({ error: 'Додайте назву документа.' }).min(5).max(180),
-    slug,
-    category: z.enum(['Установчі документи', 'Освітній процес', 'Для батьків', 'Звіти'], {
-      error: 'Оберіть одну з дозволених категорій документів.',
+  schema: z
+    .object({
+      title: z.string({ error: 'Додайте назву документа.' }).min(5).max(180),
+      slug,
+      category: z.enum(['Установчі документи', 'Освітній процес', 'Для батьків', 'Звіти'], {
+        error: 'Оберіть одну з дозволених категорій документів.',
+      }),
+      documentDate: z.coerce.date({ error: 'Додайте коректну дату документа.' }),
+      summary: z.string({ error: 'Додайте короткий опис документа.' }).min(10).max(360),
+      pdf: documentPdf.optional(),
+      status,
+      academicYear: optionalAcademicYear,
+    })
+    .superRefine((data, context) => {
+      if (data.status === 'published' && !data.pdf) {
+        context.addIssue({ code: 'custom', path: ['pdf'], message: 'Для публікації документа обов’язково завантажте PDF-файл.' });
+      }
     }),
-    documentDate: z.coerce.date({ error: 'Додайте коректну дату документа.' }),
-    summary: z.string({ error: 'Додайте короткий опис документа.' }).min(10).max(360),
-    pdf: z
-      .string({ error: 'Додайте шлях до PDF.' })
-      .regex(/^\/files\/[a-z0-9/_-]+\.pdf$/i, 'PDF повинен бути в /public/files і мати безпечну назву файла.')
-      .refine(
-        (value) => existsSync(join(process.cwd(), 'public', value.replace(/^\//, ''))),
-        'PDF-файл не знайдено в каталозі public. Перевірте шлях або завантажте файл.',
-      ),
-    status,
-    academicYear: optionalAcademicYear,
-  }),
 });
 
 const announcements = defineCollection({

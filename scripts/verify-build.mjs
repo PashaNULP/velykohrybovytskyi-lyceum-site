@@ -53,11 +53,13 @@ for (const collection of ['news', 'documents', 'announcements', 'galleries']) {
     }
 
     if (collection === 'documents') {
-      assert(entry.pdf, `Немає PDF: ${relative(root, path)}`);
-      const publicPdf = join(root, 'public', entry.pdf.replace(/^\//, ''));
-      const builtPdf = join(dist, entry.pdf.replace(/^\//, ''));
-      assert(existsSync(publicPdf), `PDF не знайдено: ${entry.pdf}`);
-      assert(existsSync(builtPdf), `PDF не скопійовано до dist: ${entry.pdf}`);
+      if (entry.status === 'published') assert(entry.pdf, `Немає PDF в опублікованому документі: ${relative(root, path)}`);
+      if (entry.pdf) {
+        const publicPdf = join(root, 'public', entry.pdf.replace(/^\//, ''));
+        const builtPdf = join(dist, entry.pdf.replace(/^\//, ''));
+        assert(existsSync(publicPdf), `PDF не знайдено: ${entry.pdf}`);
+        assert(existsSync(builtPdf), `PDF не скопійовано до dist: ${entry.pdf}`);
+      }
       if (entry.status !== 'published') assert(!rendered.includes(entry.title), `Неопублікований документ потрапив у HTML: ${entry.title}`);
     }
 
