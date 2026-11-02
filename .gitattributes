@@ -4,3 +4,4 @@
 *.jpeg binary
 *.webp binary
 *.avif binary
+prototype/index.html whitespace=-trailing-space

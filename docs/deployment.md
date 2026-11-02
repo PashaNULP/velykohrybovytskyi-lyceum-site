@@ -6,7 +6,7 @@
 
 Рекомендована структура:
 
-- приватний репозиторій, коренем якого є цей каталог `site/`;
+- приватний репозиторій, коренем якого є каталог проєкту з `package.json`, `src/` і `.pages.yml`;
 - основна гілка `main`;
 - короткоживучі гілки `work/<назва>` для змін коду та pull request;
 - Pages CMS редагує `main` безпосередньо, оскільки редактори працюють зі статусами `draft`, `review`, `published`, а не з Git-гілками;
@@ -33,7 +33,7 @@ git status --ignored
 4. Framework preset: `Astro`.
 5. Build command: `npm run build`.
 6. Build output directory: `dist`.
-7. Root directory: залишити порожнім, бо `site/` є коренем репозиторію.
+7. Root directory: залишити порожнім, бо Astro-проєкт розташований безпосередньо в корені репозиторію.
 8. Node береться з `.nvmrc`: `22.23.4`.
 
 Для першого тестового розгортання в production-оточенні Cloudflare встановити:
