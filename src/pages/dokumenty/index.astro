@@ -10,14 +10,10 @@ const categories = [...new Set(documents.map((item) => item.data.category))];
 
 <BaseLayout title="Документи · Великогрибовицький ліцей" description="Документи Великогрибовицького ліцею.">
   <InnerHeader title="Документи" description="Зрозумілий каталог документів, програм і звітів закладу освіти." />
-  <section class="content-section">
+  <section class="content-section documents-index">
     <div class="container">
-      <div class="section-top">
-        <div>
-          <span class="eyebrow">Інформаційна відкритість</span>
-          <h2 class="section-title">Каталог матеріалів</h2>
-          <p class="section-sub">Офіційні документи, освітні програми та звіти закладу освіти.</p>
-        </div>
+      <div class="compact-page-tools document-tools">
+        <p>Офіційні документи, освітні програми та звіти закладу освіти</p>
         {documents.length > 0 && (
           <div>
             <label class="sr-only" for="doc-search">Пошук документів</label>
