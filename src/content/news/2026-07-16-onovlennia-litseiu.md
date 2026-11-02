@@ -4,6 +4,9 @@ slug: onovlennia-prymishchen-ta-dostupnist
 publishedAt: 2026-07-16
 category: Спільнота
 summary: "Під час канікул у закладі тривали ремонти коридорів і кабінетів, а для кращої навігації встановили таблички зі шрифтом Брайля."
+cover:
+  src: "/media/images/news/2026-07-16-onovlennia.jpg"
+  alt: "Оновлене приміщення Великогрибовицького ліцею"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

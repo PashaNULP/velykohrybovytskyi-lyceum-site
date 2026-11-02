@@ -4,6 +4,9 @@ slug: doslidni-dilianky-litseiu
 publishedAt: 2026-07-18
 category: Навчання
 summary: "Учні доглядають за квітами й овочами на території ліцею та спостерігають за результатами власної праці."
+cover:
+  src: "/media/images/news/2026-07-18-doslidni-dilianky.jpg"
+  alt: "Учні доглядають дослідні ділянки на території ліцею"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

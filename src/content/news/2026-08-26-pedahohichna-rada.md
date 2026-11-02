@@ -4,6 +4,9 @@ slug: pedahohichna-rada-serpen-2026
 publishedAt: 2026-08-26
 category: Навчання
 summary: "Педагогічний колектив обговорив організацію навчання, безпеку, інклюзію, психологічну підтримку та професійний розвиток."
+cover:
+  src: "/media/images/news/2026-08-26-pedahohichna-rada.jpg"
+  alt: "Педагогічний колектив під час засідання ради ліцею"
 status: published
 featured: true
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

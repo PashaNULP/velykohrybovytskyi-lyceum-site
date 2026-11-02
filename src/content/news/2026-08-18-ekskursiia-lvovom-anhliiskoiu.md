@@ -4,6 +4,9 @@ slug: ekskursiia-lvovom-anhliiskoiu
 publishedAt: 2026-08-18
 category: Навчання
 summary: "Екскурсія центром Львова стала для ліцеїстів практикою живого спілкування англійською та першою зустріччю з американським волонтером."
+cover:
+  src: "/media/images/news/2026-08-18-lviv-english.jpg"
+  alt: "Учні ліцею під час англомовної екскурсії Львовом"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

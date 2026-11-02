@@ -4,6 +4,9 @@ slug: koordynatsiina-narada-ta-navchalna-evakuatsiia
 publishedAt: 2026-02-11
 category: Навчання
 summary: "Адміністрація, поліція та рятувальники відпрацювали взаємодію під час надзвичайних ситуацій і проаналізували алгоритми евакуації."
+cover:
+  src: "/media/images/news/2026-02-11-evacuation.jpg"
+  alt: "Практичне заняття з цивільного захисту у ліцеї"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

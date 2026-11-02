@@ -4,6 +4,9 @@ slug: ostannii-dzvonyk-2026
 publishedAt: 2026-06-05
 category: Події
 summary: "Ліцейна родина відзначила завершення навчального року, подякувала учням, педагогам і батькам та привітала випускників."
+cover:
+  src: "/media/images/news/2026-06-05-last-bell.jpg"
+  alt: "Урочистості останнього дзвоника у Великогрибовицькому ліцеї"
 status: published
 featured: true
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

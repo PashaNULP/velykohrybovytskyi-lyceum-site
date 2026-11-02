@@ -4,6 +4,9 @@ slug: bezpeka-na-dorozi-ta-profesiia-kryminalista
 publishedAt: 2026-04-16
 category: Навчання
 summary: "Представники поліції провели практичні заняття з дорожньої безпеки для молодших учнів і профорієнтаційну зустріч зі старшокласниками."
+cover:
+  src: "/media/images/news/2026-04-16-road-safety.jpg"
+  alt: "Практичне заняття з дорожньої безпеки для учнів ліцею"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

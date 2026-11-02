@@ -4,6 +4,9 @@ slug: zapal-litnia-robota-2026
 publishedAt: 2026-07-14
 category: Спільнота
 summary: "Команда учнівського підприємства створює нові вироби, удосконалює дизайн і готується до майбутніх благодійних ярмарків."
+cover:
+  src: "/media/images/news/2026-07-14-zapal.jpg"
+  alt: "Команда шкільного соціального підприємства ЗАПАЛ"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

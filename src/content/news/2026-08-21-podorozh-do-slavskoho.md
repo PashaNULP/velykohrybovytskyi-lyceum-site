@@ -4,6 +4,9 @@ slug: podorozh-odynadtsiatyklasnykiv-do-slavskoho
 publishedAt: 2026-08-21
 category: Спільнота
 summary: "Учні 11-А класу разом із батьками та класною керівницею провели спільний час у Карпатах напередодні навчального року."
+cover:
+  src: "/media/images/news/2026-08-21-slavske.jpg"
+  alt: "Одинадцятикласники під час подорожі до Славського"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

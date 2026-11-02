@@ -4,6 +4,9 @@ slug: pidsumky-blahodiinykh-initsiatyv-2025-2026
 publishedAt: 2026-07-20
 category: Спільнота
 summary: "Упродовж 2025–2026 навчального року ліцейна спільнота проводила ярмарки, майстер-класи та волонтерські акції на підтримку захисників."
+cover:
+  src: "/media/images/news/2026-07-20-blahodiinist.jpg"
+  alt: "Учасники благодійної ініціативи Великогрибовицького ліцею"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

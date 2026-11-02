@@ -4,6 +4,9 @@ slug: premiera-vystavy-polianna
 publishedAt: 2026-05-14
 category: Події
 summary: "Юні актори ліцею зіграли виставу за мотивами твору Елеонор Портер і подарували глядачам історію про добро та надію."
+cover:
+  src: "/media/images/news/2026-05-14-polianna.jpg"
+  alt: "Учасники театральної вистави Поліанна"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

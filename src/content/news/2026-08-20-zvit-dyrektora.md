@@ -4,6 +4,9 @@ slug: zvit-dyrektora-2025-2026
 publishedAt: 2026-08-20
 category: Спільнота
 summary: "Любов Садовська підсумувала освітні результати, досягнення учнів, розвиток інфраструктури та роботу ліцейної команди."
+cover:
+  src: "/media/images/lyceum/lyceum-building.jpg"
+  alt: "Будівля Великогрибовицького ліцею"
 status: published
 featured: true
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

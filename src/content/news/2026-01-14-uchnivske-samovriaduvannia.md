@@ -4,6 +4,9 @@ slug: uchnivske-samovriaduvannia-plany-2026
 publishedAt: 2026-01-14
 category: Спільнота
 summary: "Представники учнівського самоврядування підбили підсумки півріччя та обговорили освітні, культурні, спортивні й волонтерські ініціативи."
+cover:
+  src: "/media/images/news/2026-01-14-student-council.jpg"
+  alt: "Засідання учнівського самоврядування Великогрибовицького ліцею"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

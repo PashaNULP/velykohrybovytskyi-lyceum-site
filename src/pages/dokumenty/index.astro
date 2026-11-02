@@ -28,7 +28,7 @@ const categories = [...new Set(documents.map((item) => item.data.category))];
 
       {documents.length > 0 ? (
         <>
-          <div class="tag-row" aria-label="Категорії документів">
+          <div class="tag-row" id="osvitnii-protses" aria-label="Категорії документів">
             <button class="filter-btn active" type="button" data-doc-category="all" aria-pressed="true">Усі</button>
             {categories.map((category) => <button class="filter-btn" type="button" data-doc-category={category} aria-pressed="false">{category}</button>)}
           </div>
@@ -38,7 +38,7 @@ const categories = [...new Set(documents.map((item) => item.data.category))];
               const documentUrl = data.pdf ?? data.externalUrl!;
               const isLocalPdf = Boolean(data.pdf);
               return (
-              <article class="doc-item" data-doc-item data-category={data.category} data-title={data.title.toLocaleLowerCase('uk')}>
+              <article class="doc-item" id={data.slug} data-doc-item data-category={data.category} data-title={data.title.toLocaleLowerCase('uk')}>
                 <span class="doc-symbol"><Icon name="file" /></span>
                 <span class="doc-meta">
                   <strong>{data.title}</strong>

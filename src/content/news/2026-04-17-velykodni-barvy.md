@@ -4,6 +4,9 @@ slug: sviato-velykodni-barvy
 publishedAt: 2026-04-17
 category: Події
 summary: "Учні 2 класу співали, водили гаївки, танцювали та ділилися родинними традиціями святкування Великодня."
+cover:
+  src: "/media/images/news/2026-04-17-easter.jpg"
+  alt: "Свято Великодні барви у Великогрибовицькому ліцеї"
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"
