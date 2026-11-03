@@ -8,10 +8,15 @@ export const site = {
 } as const;
 
 export const navigation = [
-  { href: '/', label: 'Головна' },
   { href: '/pro-litsei/', label: 'Про ліцей' },
-  { href: '/novyny/', label: 'Новини' },
+  { href: '/uchnyam/rozklad/', label: 'Розклад' },
   { href: '/uchnyam/', label: 'Учням' },
   { href: '/batkam/', label: 'Батькам' },
+  { href: '/novyny/', label: 'Новини' },
+  { href: '/oholoshennia/', label: 'Оголошення' },
   { href: '/dokumenty/', label: 'Документи' },
 ] as const;
+
+export const officialLinks = {
+  admissionRules: 'https://www.hrybovychi-school.com.ua/інформаційна-відкритість/правила-прийому-до-закладу',
+} as const;

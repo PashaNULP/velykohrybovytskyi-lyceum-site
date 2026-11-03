@@ -21,7 +21,7 @@ const programs = [
       </article>
 
       <section class="hub-section" aria-labelledby="programs-title">
-        <div class="hub-heading"><div><span class="eyebrow">Навчання</span><h2 id="programs-title">Освітні програми</h2></div><a class="text-link" href="/dokumenty/#osvitnii-protses">Усі матеріали <Icon name="arrow-right" /></a></div>
+        <div class="hub-heading"><div><span class="eyebrow">Навчання</span><h2 id="programs-title">Освітні програми</h2></div><a class="text-link" href="/dokumenty/?category=Освітній процес#osvitnii-protses">Усі матеріали <Icon name="arrow-right" /></a></div>
         <div class="resource-list">
           {programs.map((program) => <a class="resource-row" href={program.href}><span class="resource-label">{program.label}</span><strong>{program.title}</strong><Icon name="arrow-right" /></a>)}
         </div>
@@ -30,7 +30,7 @@ const programs = [
       <section class="hub-section" aria-labelledby="community-title">
         <div class="hub-heading"><div><span class="eyebrow">Ліцейна спільнота</span><h2 id="community-title">Події та ініціативи</h2></div></div>
         <div class="hub-links">
-          <a href="/novyny/?category=Спільнота"><span class="card-icon"><Icon name="users" /></span><span><strong>Учнівське самоврядування</strong><small>Ініціативи, волонтерство та учнівські проєкти</small></span><Icon name="arrow-right" /></a>
+          <a href="/novyny/uchnivske-samovriaduvannia-plany-2026/"><span class="card-icon"><Icon name="users" /></span><span><strong>Плани учнівського самоврядування</strong><small>Підсумки, ініціативи та наступні кроки команди</small></span><Icon name="arrow-right" /></a>
           <a href="/novyny/"><span class="card-icon"><Icon name="star" /></span><span><strong>Новини ліцею</strong><small>Навчання, творчість, спорт і досягнення</small></span><Icon name="arrow-right" /></a>
           <a href="/oholoshennia/"><span class="card-icon"><Icon name="calendar" /></span><span><strong>Оголошення</strong><small>Організаційні повідомлення та важливі дати</small></span><Icon name="arrow-right" /></a>
           <a href="/kontakty/"><span class="card-icon"><Icon name="phone" /></span><span><strong>Потрібна допомога?</strong><small>Офіційний телефон та адреса ліцею</small></span><Icon name="arrow-right" /></a>

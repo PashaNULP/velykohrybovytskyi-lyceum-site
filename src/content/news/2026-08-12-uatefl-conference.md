@@ -7,6 +7,8 @@ summary: "Жанна Блажівська долучилася до профес
 cover:
   src: "/media/images/news/2026-08-12-uatefl.jpg"
   alt: "Представниця ліцею на конференції UATEFL у Львові"
+  focusX: 50
+  focusY: 38
 status: published
 featured: false
 sourceUrl: "https://www.hrybovychi-school.com.ua/новини"

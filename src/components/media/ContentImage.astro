@@ -6,6 +6,10 @@ interface Props {
   loading?: 'eager' | 'lazy';
   fetchpriority?: 'high' | 'low' | 'auto';
   sizes?: string;
+  width?: number;
+  height?: number;
+  focusX?: number;
+  focusY?: number;
 }
 
 const {
@@ -15,7 +19,15 @@ const {
   loading = 'lazy',
   fetchpriority = 'auto',
   sizes = '(max-width: 700px) 100vw, 50vw',
+  width,
+  height,
+  focusX,
+  focusY,
 } = Astro.props;
+
+const focusStyle = focusX === undefined && focusY === undefined
+  ? undefined
+  : `--image-focus-x: ${focusX ?? 50}%; --image-focus-y: ${focusY ?? 50}%;`;
 ---
 
 <img
@@ -23,8 +35,9 @@ const {
   src={src}
   sizes={sizes}
   alt={alt}
-  width="1280"
-  height="853"
+  width={width}
+  height={height}
+  style={focusStyle}
   loading={loading}
   decoding="async"
   fetchpriority={fetchpriority}

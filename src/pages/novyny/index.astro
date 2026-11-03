@@ -15,7 +15,7 @@ const years = [...new Set(news.map(item => item.data.publishedAt.getFullYear()))
     const cards = [...document.querySelectorAll<HTMLElement>('[data-news-card]')];
     const status = document.querySelector('#news-filter-status');
     const empty = document.querySelector<HTMLElement>('#news-empty');
-    const selectCategory = (button: HTMLButtonElement) => {
+    const selectCategory = (button: HTMLButtonElement, saveToUrl = true) => {
       const selected = button.dataset.newsCategory;
       let visible = 0;
       cards.forEach((card) => {
@@ -29,10 +29,15 @@ const years = [...new Set(news.map(item => item.data.publishedAt.getFullYear()))
       });
       if (status) status.textContent = `Показано публікацій: ${visible}`;
       if (empty) empty.hidden = visible !== 0;
+      if (saveToUrl) {
+        const url = new URL(window.location.href);
+        !selected || selected === 'all' ? url.searchParams.delete('category') : url.searchParams.set('category', selected);
+        window.history.replaceState({}, '', url);
+      }
     };
     categoryButtons.forEach((button) => button.addEventListener('click', () => selectCategory(button)));
     const requestedCategory = new URLSearchParams(window.location.search).get('category');
     const requestedButton = categoryButtons.find((button) => button.dataset.newsCategory === requestedCategory);
-    if (requestedButton) selectCategory(requestedButton);
+    if (requestedButton) selectCategory(requestedButton, false);
   </script>
 </BaseLayout>

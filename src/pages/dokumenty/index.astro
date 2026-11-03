@@ -66,9 +66,19 @@ const categories = [...new Set(documents.map((item) => item.data.category))];
     const items = [...document.querySelectorAll<HTMLElement>('[data-doc-item]')];
     const status = document.querySelector('#doc-filter-status');
     const empty = document.querySelector<HTMLElement>('#doc-empty');
-    let category = 'all';
+    const requested = new URLSearchParams(window.location.search);
+    let category = buttons.some((button) => button.dataset.docCategory === requested.get('category')) ? requested.get('category')! : 'all';
+    if (search) search.value = requested.get('q') ?? '';
 
-    const filterDocuments = () => {
+    const updateUrl = () => {
+      const url = new URL(window.location.href);
+      category === 'all' ? url.searchParams.delete('category') : url.searchParams.set('category', category);
+      const query = (search?.value ?? '').trim();
+      query ? url.searchParams.set('q', query) : url.searchParams.delete('q');
+      window.history.replaceState({}, '', url);
+    };
+
+    const filterDocuments = (saveToUrl = true) => {
       const query = (search?.value ?? '').trim().toLocaleLowerCase('uk');
       let visible = 0;
       items.forEach((item) => {
@@ -79,9 +89,10 @@ const categories = [...new Set(documents.map((item) => item.data.category))];
       });
       if (status) status.textContent = `Показано документів: ${visible}`;
       if (empty) empty.hidden = visible !== 0;
+      if (saveToUrl) updateUrl();
     };
 
-    search?.addEventListener('input', filterDocuments);
+    search?.addEventListener('input', () => filterDocuments());
     buttons.forEach((button) => button.addEventListener('click', () => {
       category = button.dataset.docCategory ?? 'all';
       buttons.forEach((item) => {
@@ -91,5 +102,11 @@ const categories = [...new Set(documents.map((item) => item.data.category))];
       });
       filterDocuments();
     }));
+    buttons.forEach((button) => {
+      const active = button.dataset.docCategory === category;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    filterDocuments(false);
   </script>
 </BaseLayout>

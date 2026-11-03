@@ -59,6 +59,8 @@ const photo = z.object({
   src: mediaPath,
   alt: z.string({ error: 'Додайте альтернативний опис фотографії.' }).min(5, 'Alt-текст має бути змістовним.'),
   caption: z.string().max(240, 'Підпис фотографії задовгий.').optional(),
+  focusX: z.number({ error: 'Горизонтальний фокус має бути числом від 0 до 100.' }).int().min(0).max(100).default(50),
+  focusY: z.number({ error: 'Вертикальний фокус має бути числом від 0 до 100.' }).int().min(0).max(100).default(50),
 });
 
 const news = defineCollection({

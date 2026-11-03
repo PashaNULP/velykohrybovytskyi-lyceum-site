@@ -4,15 +4,54 @@ import { navigation } from '../../data/site';
 
 interface Props { currentPath: string }
 const { currentPath } = Astro.props;
-const isActive = (href: string) => href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+const activeHref = navigation.find((item) => currentPath.startsWith(item.href))?.href;
+const isActive = (href: string) => href === '/' ? currentPath === '/' : href === activeHref;
 ---
 
-<details class="mobile-menu">
-  <summary class="menu-toggle" aria-label="Відкрити меню"><Icon name="menu" /></summary>
-  <nav class="mobile-nav" aria-label="Мобільна навігація">
+<div class="mobile-menu" data-mobile-menu>
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="mobile-navigation"
+    aria-label="Відкрити меню"
+    data-menu-toggle
+  >
+    <Icon name="menu" />
+  </button>
+  <nav id="mobile-navigation" class="mobile-nav" aria-label="Мобільна навігація" data-mobile-nav hidden>
+    <a class:list={['nav-link', { active: isActive('/') }]} aria-current={isActive('/') ? 'page' : undefined} href="/">Головна</a>
     {navigation.map((item) => (
       <a class:list={['nav-link', { active: isActive(item.href) }]} aria-current={isActive(item.href) ? 'page' : undefined} href={item.href}>{item.label}</a>
     ))}
-    <a class:list={['nav-link', { active: isActive('/kontakty/') }]} aria-current={isActive('/kontakty/') ? 'page' : undefined} href="/kontakty/">Контакти</a>
+    <a class:list={['nav-link', 'mobile-contact-link', { active: currentPath.startsWith('/kontakty/') }]} aria-current={currentPath.startsWith('/kontakty/') ? 'page' : undefined} href="/kontakty/">Контакти</a>
   </nav>
-</details>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-mobile-menu]').forEach((menu) => {
+    const toggle = menu.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+    const nav = menu.querySelector<HTMLElement>('[data-mobile-nav]');
+    if (!toggle || !nav) return;
+
+    const setOpen = (open: boolean, returnFocus = false) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Закрити меню' : 'Відкрити меню');
+      nav.hidden = !open;
+      document.body.classList.toggle('mobile-navigation-open', open);
+      if (returnFocus) toggle.focus();
+    };
+
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') setOpen(false, true);
+    });
+    document.addEventListener('click', (event) => {
+      if (toggle.getAttribute('aria-expanded') === 'true' && event.target instanceof Node && !menu.contains(event.target)) setOpen(false);
+    });
+    window.matchMedia('(min-width: 961px)').addEventListener('change', (event) => {
+      if (event.matches) setOpen(false);
+    });
+  });
+</script>
