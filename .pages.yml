@@ -54,6 +54,22 @@ components:
       - name: caption
         label: Підпис
         type: string
+      - name: focusX
+        label: Фокус по горизонталі
+        type: number
+        default: 50
+        description: 0 — лівий край, 50 — центр, 100 — правий край. Впливає лише на кадрування обкладинки.
+        options:
+          min: 0
+          max: 100
+      - name: focusY
+        label: Фокус по вертикалі
+        type: number
+        default: 50
+        description: 0 — верхній край, 50 — центр, 100 — нижній край. Для портретів зазвичай достатньо 20–40.
+        options:
+          min: 0
+          max: 100
 
 content:
   - name: news

@@ -19,6 +19,8 @@ summary: "Демонстраційний матеріал для автомат�
 cover:
   src: /images/lyceum-crest.webp
   alt: "Герб Великогрибовицького ліцею для тестового матеріалу"
+  focusX: 42
+  focusY: 28
 gallery:
   - src: /images/lyceum-crest.webp
     alt: "Перше тестове зображення у демонстраційній галереї"
@@ -79,6 +81,8 @@ try {
   writeFileSync(documentPath, document('published'));
   build();
   assert(existsSync(join(testRoot, 'dist/novyny/test-editorial-cycle/index.html')), 'Опублікована новина не згенерована.');
+  const newsIndex = readFileSync(join(testRoot, 'dist/novyny/index.html'), 'utf8');
+  assert(newsIndex.includes('--image-focus-x: 42%; --image-focus-y: 28%;'), 'Точка фокусування обкладинки не потрапила до згенерованої картки.');
   assert(readFileSync(join(testRoot, 'dist/dokumenty/index.html'), 'utf8').includes(documentTitle), 'Опублікований PDF не зʼявився.');
 
   writeFileSync(newsPath, news('draft'));
