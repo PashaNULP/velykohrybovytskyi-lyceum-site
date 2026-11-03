@@ -2,12 +2,13 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import InnerHeader from '../../components/ui/InnerHeader.astro';
 import Icon from '../../components/ui/Icon.astro';
+import { officialLinks } from '../../data/site';
 
 const actions = [
-  { icon: 'calendar', title: 'Розклад занять', text: 'Уроки за класами та час дзвінків', href: '/uchnyam/rozklad/' },
-  { icon: 'star', title: 'Оголошення', text: 'Важливі дати й повідомлення ліцею', href: '/oholoshennia/' },
-  { icon: 'file', title: 'Режим роботи', text: 'Затверджений документ на 2026–2027 рік', href: '/dokumenty/#rezhym-roboty-litseiu-2026-2027' },
-  { icon: 'phone', title: 'Контакти', text: 'Телефон, адреса та розташування', href: '/kontakty/' },
+  { icon: 'calendar', title: 'Розклад занять', text: 'Уроки за класами та час дзвінків', href: '/uchnyam/rozklad/', external: false },
+  { icon: 'file', title: 'Правила зарахування', text: 'Офіційний порядок і перелік документів', href: officialLinks.admissionRules, external: true },
+  { icon: 'star', title: 'Оголошення', text: 'Важливі дати й повідомлення ліцею', href: '/oholoshennia/', external: false },
+  { icon: 'phone', title: 'Контакти', text: 'Телефон, адреса та розташування', href: '/kontakty/', external: false },
 ] as const;
 const documents = [
   { title: 'Освітня програма 1–4 класів', meta: '2025–2026 навчальний рік', href: '/dokumenty/#osvitnia-prohrama-1-4-2025-2026' },
@@ -20,13 +21,13 @@ const documents = [
 <BaseLayout title="Батькам · Великогрибовицький ліцей" description="Розклад, документи, оголошення та контакти для батьків учнів Великогрибовицького ліцею.">
   <InnerHeader title="Батькам" description="Основна організаційна інформація та прямі переходи до потрібних матеріалів." />
   <section class="content-section"><div class="container parent-hub">
-    <nav class="action-grid" aria-label="Основне для батьків">{actions.map((action) => <a href={action.href}><span class="card-icon"><Icon name={action.icon} /></span><span><strong>{action.title}</strong><small>{action.text}</small></span><Icon name="arrow-right" /></a>)}</nav>
+    <nav class="action-grid" aria-label="Основне для батьків">{actions.map((action) => <a href={action.href} target={action.external ? '_blank' : undefined} rel={action.external ? 'noopener noreferrer' : undefined}><span class="card-icon"><Icon name={action.icon} /></span><span><strong>{action.title}</strong><small>{action.text}</small></span><Icon name={action.external ? 'external' : 'arrow-right'} /></a>)}</nav>
     <div class="parent-columns">
       <section class="hub-section" aria-labelledby="parent-documents-title">
         <div class="hub-heading"><div><span class="eyebrow">Навчання</span><h2 id="parent-documents-title">Основні документи</h2></div><a class="text-link" href="/dokumenty/">Увесь каталог <Icon name="arrow-right" /></a></div>
         <div class="resource-list compact">{documents.map((document) => <a class="resource-row" href={document.href}><span><strong>{document.title}</strong><small>{document.meta}</small></span><Icon name="arrow-right" /></a>)}</div>
       </section>
-      <aside class="contact-panel"><span class="eyebrow">Зарахування та довідки</span><h2>Уточніть інформацію безпосередньо в ліцеї</h2><p>Перелік документів і порядок зарахування залежать від класу та чинних рішень. Адміністрація надасть актуальну відповідь.</p><a class="btn btn-dark" href="/kontakty/">Зв’язатися з ліцеєм <Icon name="arrow-right" /></a></aside>
+      <aside class="contact-panel"><span class="eyebrow">Зарахування та довідки</span><h2>Офіційні правила прийому</h2><p>Перегляньте чинний порядок і перелік документів на офіційній сторінці ліцею. Індивідуальні питання можна уточнити в адміністрації.</p><div class="contact-panel-actions"><a class="btn btn-dark" href={officialLinks.admissionRules} target="_blank" rel="noopener noreferrer">Правила зарахування <Icon name="external" /></a><a class="text-link" href="/kontakty/">Контакти адміністрації <Icon name="arrow-right" /></a></div></aside>
     </div>
   </div></section>
 </BaseLayout>

@@ -1,6 +1,6 @@
 ---
 import Icon from '../ui/Icon.astro';
-import { site } from '../../data/site';
+import { officialLinks, site } from '../../data/site';
 ---
 
 <footer class="footer">
@@ -21,6 +21,7 @@ import { site } from '../../data/site';
           <li><a href="/uchnyam/">Учням</a></li>
           <li><a href="/uchnyam/rozklad/">Розклад уроків</a></li>
           <li><a href="/batkam/">Батькам</a></li>
+          <li><a href={officialLinks.admissionRules} target="_blank" rel="noopener noreferrer">Правила зарахування ↗</a></li>
           <li><a href="/dokumenty/">Документи</a></li>
           <li><a href="/oholoshennia/">Оголошення</a></li>
           <li><a href="/halerei/">Фотогалереї</a></li>

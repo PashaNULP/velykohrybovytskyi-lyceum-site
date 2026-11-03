@@ -2,10 +2,11 @@
 import Icon from '../ui/Icon.astro';
 
 const links = [
-  { icon: 'calendar', label: 'Розклад', description: 'Уроки й дзвінки', href: '/uchnyam/rozklad/' },
-  { icon: 'book', label: 'Учням', description: 'Навчальні ресурси', href: '/uchnyam/' },
+  { icon: 'book', label: 'Розклад уроків', description: 'Класи й дні тижня', href: '/uchnyam/rozklad/#lesson-schedule-title' },
+  { icon: 'calendar', label: 'Розклад дзвінків', description: 'Уроки та перерви', href: '/uchnyam/rozklad/#bell-schedule-title' },
+  { icon: 'star', label: 'Оголошення', description: 'Важливі повідомлення', href: '/oholoshennia/' },
   { icon: 'file', label: 'Документи', description: 'Програми й звіти', href: '/dokumenty/' },
-  { icon: 'users', label: 'Зв’язатися', description: 'Адреса та контакти', href: '/kontakty/' },
+  { icon: 'users', label: 'Контакти', description: 'Телефон і адреса', href: '/kontakty/' },
 ] as const;
 ---
 
