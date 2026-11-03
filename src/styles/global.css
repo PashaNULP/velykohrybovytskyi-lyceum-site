@@ -76,7 +76,8 @@
 .card-visual .school-photo,.gallery-card-image img{object-position:var(--image-focus-x,50%) var(--image-focus-y,50%)}
 .article-layout .article-hero:has(.article-real-photo){min-height:0;padding:clamp(10px,2vw,18px);background:#edf3f0}
 .article-hero .article-real-photo{position:relative;inset:auto;display:block;width:auto;max-width:100%;height:auto;max-height:min(72vh,720px);object-fit:contain;border-radius:12px;z-index:1}
+.article-prose img{display:block;width:auto;max-width:100%;height:auto;max-height:min(72vh,720px);object-fit:contain;margin:24px auto;border-radius:12px}
 .content-photo{aspect-ratio:auto;min-height:180px;display:flex;align-items:center;justify-content:center;padding:10px}
 .content-photo img{position:relative;inset:auto;display:block;width:auto;max-width:100%;height:auto;max-height:min(70vh,680px);object-fit:contain;border-radius:9px;z-index:1;transition:none}
 .content-photo:hover img{transform:none}
-@media(max-width:700px){.article-layout .article-hero:has(.article-real-photo){min-height:0;padding:7px}.article-hero .article-real-photo{max-height:68vh;border-radius:10px}.content-photo{min-height:120px;padding:6px}.content-photo img{max-height:68vh}}
+@media(max-width:700px){.article-layout .article-hero:has(.article-real-photo){min-height:0;padding:7px}.article-hero .article-real-photo,.article-prose img{max-height:68vh;border-radius:10px}.content-photo{min-height:120px;padding:6px}.content-photo img{max-height:68vh}}
