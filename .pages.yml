@@ -346,6 +346,218 @@ content:
           media: false
           switcher: false
 
+  - name: schedules
+    label: Розклад уроків
+    type: collection
+    path: src/content/schedules
+    format: yaml-frontmatter
+    filename:
+      template: "{fields.slug}.md"
+      field: false
+    view:
+      primary: className
+      fields: [className, academicYear, updatedAt, status]
+      search: [className, academicYear]
+      sort: [className, updatedAt, status]
+      default:
+        sort: className
+        order: asc
+    fields:
+      - name: title
+        label: Назва запису
+        type: string
+        required: true
+        description: "Наприклад: Розклад 7-А класу"
+      - name: slug
+        component: slug
+        description: Унікальний ідентифікатор класу для адреси, наприклад 7-a. Не змінюйте після публікації.
+      - name: className
+        label: Назва класу
+        type: string
+        required: true
+        description: "Так, як її побачать відвідувачі: 7-А клас"
+      - name: academicYear
+        label: Навчальний рік
+        type: string
+        required: true
+        description: "Формат: 2026–2027"
+        pattern:
+          regex: "^\\d{4}–\\d{4}$"
+          message: Використовуйте формат 2026–2027 із довгим тире.
+      - name: updatedAt
+        label: Оновлено
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: status
+        component: status
+      - name: sourceUrl
+        label: Офіційне першоджерело
+        type: string
+        description: Для публікації потрібне HTTPS-посилання на затверджений розклад. Чернетка може бути без нього.
+      - name: notes
+        label: Загальна примітка
+        type: text
+      - name: days
+        label: Дні тижня
+        type: object
+        required: true
+        list:
+          max: 5
+          collapsible:
+            collapsed: true
+            summary: "{day}"
+        fields:
+          - name: day
+            label: День
+            type: select
+            required: true
+            options:
+              values:
+                - name: monday
+                  label: Понеділок
+                - name: tuesday
+                  label: Вівторок
+                - name: wednesday
+                  label: Середа
+                - name: thursday
+                  label: Четвер
+                - name: friday
+                  label: П’ятниця
+          - name: lessons
+            label: Уроки
+            type: object
+            required: true
+            list:
+              max: 13
+              collapsible:
+                collapsed: true
+                summary: "{number}. {subject}"
+            fields:
+              - name: number
+                label: Номер уроку
+                type: number
+                required: true
+              - name: subject
+                label: Предмет
+                type: string
+                required: true
+              - name: start
+                label: Початок
+                type: string
+                description: "Необов’язково. Формат: 09:00"
+              - name: end
+                label: Завершення
+                type: string
+                description: "Необов’язково. Формат: 09:45"
+              - name: room
+                label: Кабінет
+                type: string
+              - name: teacher
+                label: Учитель
+                type: string
+                description: Додавайте лише дані, дозволені до публікації.
+              - name: note
+                label: Примітка
+                type: string
+              - name: groups
+                label: Поділ на групи
+                type: object
+                list:
+                  max: 6
+                  collapsible:
+                    collapsed: true
+                    summary: "{name}"
+                fields:
+                  - name: name
+                    label: Назва групи
+                    type: string
+                    required: true
+                  - name: subject
+                    label: Предмет
+                    type: string
+                  - name: room
+                    label: Кабінет
+                    type: string
+                  - name: teacher
+                    label: Учитель
+                    type: string
+                  - name: note
+                    label: Примітка
+                    type: string
+
+  - name: bellSchedules
+    label: Розклад дзвінків
+    type: collection
+    path: src/content/bell-schedules
+    format: yaml-frontmatter
+    filename:
+      template: "{fields.slug}.md"
+      field: false
+    view:
+      primary: title
+      fields: [title, academicYear, updatedAt, status]
+      search: [title, academicYear]
+      sort: [title, updatedAt, status]
+    fields:
+      - name: title
+        label: Група класів
+        type: string
+        required: true
+      - name: slug
+        component: slug
+      - name: note
+        label: Примітка
+        type: text
+      - name: academicYear
+        label: Навчальний рік
+        type: string
+        required: true
+        description: "Формат: 2026–2027"
+      - name: updatedAt
+        label: Дата затвердження або оновлення
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: status
+        component: status
+      - name: sourceUrl
+        label: Офіційна сторінка-першоджерело
+        type: string
+      - name: documentUrl
+        label: Затверджений документ
+        type: string
+      - name: lessons
+        label: Дзвінки
+        type: object
+        required: true
+        list:
+          min: 1
+          max: 13
+          collapsible:
+            collapsed: true
+            summary: "Урок {number}: {start}–{end}"
+        fields:
+          - name: number
+            label: Номер уроку
+            type: number
+            required: true
+          - name: start
+            label: Початок
+            type: string
+            required: true
+            description: "Формат: 09:00"
+          - name: end
+            label: Завершення
+            type: string
+            required: true
+            description: "Формат: 09:45"
+          - name: breakAfterMinutes
+            label: Перерва після уроку, хв
+            type: number
+
 settings:
   content:
     merge: true

@@ -2,18 +2,114 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import InnerHeader from '../../components/ui/InnerHeader.astro';
 import Icon from '../../components/ui/Icon.astro';
+import { formatDate, getPublishedBellSchedules, getPublishedSchedules } from '../../lib/content';
 
-const schedules = [
-  { title: '5–11 класи', note: 'Перед першим уроком може проводитися нульовий урок.', lessons: [['0', '08:10', '08:55'], ['1', '09:00', '09:45'], ['2', '09:55', '10:40'], ['3', '11:00', '11:45'], ['4', '12:05', '12:50'], ['5', '13:00', '13:45'], ['6', '13:55', '14:40'], ['7', '14:50', '15:35'], ['8', '15:45', '16:30']] },
-  { title: '1 клас', note: 'Тривалість уроку — 35 хвилин.', lessons: [['1', '09:00', '09:35'], ['2', '09:45', '10:20'], ['3', '10:40', '11:15'], ['4', '11:45', '12:20'], ['5', '12:30', '13:05']] },
-  { title: '2–4 класи', note: 'Тривалість уроку — 40 хвилин.', lessons: [['1', '09:00', '09:40'], ['2', '09:50', '10:30'], ['3', '10:50', '11:30'], ['4', '12:00', '12:40'], ['5', '12:50', '13:30'], ['6', '13:45', '14:25']] },
+const [schedules, bellSchedules] = await Promise.all([getPublishedSchedules(), getPublishedBellSchedules()]);
+const weekdays = [
+  ['monday', 'Понеділок'], ['tuesday', 'Вівторок'], ['wednesday', 'Середа'],
+  ['thursday', 'Четвер'], ['friday', 'П’ятниця'],
 ] as const;
+const currentAcademicYear = bellSchedules[0]?.data.academicYear ?? '2026–2027';
+const lastUpdated = bellSchedules.reduce<Date | undefined>((latest, entry) => !latest || entry.data.updatedAt > latest ? entry.data.updatedAt : latest, undefined);
+const officialDocument = bellSchedules.find((entry) => entry.data.documentUrl)?.data.documentUrl;
 ---
 
-<BaseLayout title="Розклад дзвінків · Великогрибовицький ліцей" description="Розклад дзвінків Великогрибовицького ліцею на 2026–2027 навчальний рік.">
-  <InnerHeader title="Розклад дзвінків" description="Час уроків для 1–11 класів у 2026–2027 навчальному році." />
-  <section class="content-section"><div class="container schedule-page">
-    <div class="schedule-notice"><Icon name="calendar" /><div><strong>Актуально на 2026–2027 навчальний рік</strong><p>Розклад укладено за затвердженим режимом роботи ліцею від 26 серпня 2026 року.</p></div><a class="text-link" href="/dokumenty/#rezhym-roboty-litseiu-2026-2027">Режим роботи <Icon name="arrow-right" /></a></div>
-    <div class="schedule-grid">{schedules.map((schedule, index) => <article class:list={['schedule-card', { primary: index === 0 }]}><header><span class="eyebrow">Навчальні заняття</span><h2>{schedule.title}</h2><p>{schedule.note}</p></header><div class="lesson-table" role="table" aria-label={`Розклад дзвінків для ${schedule.title}`}><div class="lesson-row lesson-head" role="row"><span role="columnheader">Урок</span><span role="columnheader">Початок</span><span role="columnheader">Кінець</span></div>{schedule.lessons.map(([number, start, end]) => <div class="lesson-row" role="row"><strong role="cell">{number}</strong><time role="cell">{start}</time><time role="cell">{end}</time></div>)}</div></article>)}</div>
-  </div></section>
+<BaseLayout title="Розклад уроків і дзвінків · Великогрибовицький ліцей" description="Актуальний розклад уроків за класами та розклад дзвінків Великогрибовицького ліцею.">
+  <InnerHeader title="Розклад" description="Уроки за класами та час дзвінків на навчальний день." />
+  <section class="content-section schedule-section">
+    <div class="container schedule-page">
+      <section class="lesson-schedule-section" aria-labelledby="lesson-schedule-title">
+        <div class="schedule-section-heading"><div>
+          <span class="eyebrow">Для учнів і батьків</span>
+          <h2 id="lesson-schedule-title" class="section-title">Розклад уроків</h2>
+          <p class="section-sub">Оберіть клас і день тижня. Посилання на вибраний розклад можна скопіювати.</p>
+        </div></div>
+
+        {schedules.length > 0 ? (
+          <div class="schedule-app" data-schedule-app>
+            <div class="schedule-controls" aria-label="Налаштування розкладу">
+              <label class="schedule-select-label" for="schedule-class"><span>Клас</span><select id="schedule-class" data-class-select>{schedules.map((schedule) => <option value={schedule.data.slug}>{schedule.data.className}</option>)}</select></label>
+              <div class="schedule-day-control"><span id="schedule-day-label">День</span><div class="schedule-day-tabs" role="group" aria-labelledby="schedule-day-label">
+                <button type="button" class="active" data-day="all" aria-pressed="true">Увесь тиждень</button>
+                {weekdays.map(([value, label]) => <button type="button" data-day={value} aria-pressed="false">{label}</button>)}
+              </div></div>
+              <button class="copy-schedule-link" type="button" data-copy-link><Icon name="external" /><span data-copy-label>Скопіювати посилання</span></button>
+            </div>
+            <p class="sr-only" aria-live="polite" data-live-status></p>
+            <div class="class-schedules">
+              {schedules.map((schedule, scheduleIndex) => (
+                <article class:list={['class-schedule-panel', { active: scheduleIndex === 0 }]} data-class-panel={schedule.data.slug} aria-labelledby={`class-${schedule.data.slug}`}>
+                  <header class="class-schedule-header"><div><span class="eyebrow">{schedule.data.academicYear} навчальний рік</span><h3 id={`class-${schedule.data.slug}`}>{schedule.data.className}</h3></div><span>Оновлено {formatDate(schedule.data.updatedAt)}</span></header>
+                  {schedule.data.notes && <p class="schedule-note">{schedule.data.notes}</p>}
+                  <div class="week-schedule-grid" data-week-grid>
+                    {weekdays.map(([dayValue, dayLabel]) => {
+                      const day = schedule.data.days.find((item) => item.day === dayValue);
+                      return <section class="schedule-day" data-day-panel={dayValue} aria-labelledby={`${schedule.data.slug}-${dayValue}`}>
+                        <h4 id={`${schedule.data.slug}-${dayValue}`}>{dayLabel}</h4>
+                        {day && day.lessons.length > 0 ? <div class="subject-list">{day.lessons.map((lesson) => <article class="subject-row">
+                          <strong class="subject-number">{lesson.number}</strong>
+                          <div class="subject-main"><strong>{lesson.subject}</strong>{(lesson.room || lesson.teacher || lesson.note) && <span>{[lesson.room && `Кабінет ${lesson.room}`, lesson.teacher, lesson.note].filter(Boolean).join(' · ')}</span>}
+                            {lesson.groups.length > 0 && <ul class="lesson-groups" aria-label="Поділ на групи">{lesson.groups.map((group) => <li><b>{group.name}:</b> {[group.subject, group.room && `каб. ${group.room}`, group.teacher, group.note].filter(Boolean).join(' · ')}</li>)}</ul>}
+                          </div>
+                          {lesson.start && lesson.end && <time class="subject-time">{lesson.start}–{lesson.end}</time>}
+                        </article>)}</div> : <p class="day-empty">Для цього дня уроки не вказані.</p>}
+                      </section>;
+                    })}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div class="schedule-empty-state"><Icon name="calendar" /><div><h3>Розклад уроків для цього класу поки не опубліковано</h3><p>Після затвердження адміністрацією він з’явиться тут із вибором класу та дня тижня.</p></div></div>
+        )}
+      </section>
+
+      <section class="bell-schedule-section" aria-labelledby="bell-schedule-title">
+        <div class="schedule-section-heading bell-heading"><div><span class="eyebrow">{currentAcademicYear} навчальний рік</span><h2 id="bell-schedule-title" class="section-title">Розклад дзвінків</h2><p class="section-sub">Час початку й завершення уроків та тривалість перерв.</p></div>
+          {officialDocument && <a class="text-link" href={officialDocument} target="_blank" rel="noreferrer">Переглянути затверджений режим <Icon name="external" /></a>}
+        </div>
+        <div class="bell-schedule-grid">{bellSchedules.map((schedule, index) => <article class:list={['schedule-card', { primary: index === 2 }]}>
+          <header><span class="eyebrow">Навчальні заняття</span><h3>{schedule.data.title}</h3>{schedule.data.note && <p>{schedule.data.note}</p>}</header>
+          <div class="bell-table" role="table" aria-label={`Розклад дзвінків для ${schedule.data.title}`}><div class="bell-row bell-head" role="row"><span role="columnheader">Урок</span><span role="columnheader">Час</span><span role="columnheader">Перерва</span></div>
+            {schedule.data.lessons.map((lesson) => <div class="bell-row" role="row"><strong role="cell">{lesson.number}</strong><time role="cell">{lesson.start}–{lesson.end}</time><span role="cell">{lesson.breakAfterMinutes !== undefined ? `${lesson.breakAfterMinutes} хв` : '—'}</span></div>)}
+          </div>
+        </article>)}</div>
+        {lastUpdated && <p class="schedule-source-note">Дані звірено з офіційним режимом роботи ліцею. Останнє оновлення: {formatDate(lastUpdated)}.</p>}
+      </section>
+    </div>
+  </section>
 </BaseLayout>
+
+<script>
+  const app = document.querySelector<HTMLElement>('[data-schedule-app]');
+  if (app) {
+    const select = app.querySelector<HTMLSelectElement>('[data-class-select]');
+    const dayButtons = Array.from(app.querySelectorAll<HTMLButtonElement>('[data-day]'));
+    const classPanels = Array.from(app.querySelectorAll<HTMLElement>('[data-class-panel]'));
+    const copyButton = app.querySelector<HTMLButtonElement>('[data-copy-link]');
+    const copyLabel = app.querySelector<HTMLElement>('[data-copy-label]');
+    const liveStatus = app.querySelector<HTMLElement>('[data-live-status]');
+    const validClasses = new Set(classPanels.map((panel) => panel.dataset.classPanel ?? ''));
+    const validDays = new Set(dayButtons.map((button) => button.dataset.day ?? ''));
+    const params = new URLSearchParams(window.location.search);
+    let selectedClass = params.get('class') ?? select?.value ?? '';
+    let selectedDay = params.get('day') ?? 'all';
+    if (!validClasses.has(selectedClass)) selectedClass = select?.value ?? '';
+    if (!validDays.has(selectedDay)) selectedDay = 'all';
+
+    const updateUrl = () => { const url = new URL(window.location.href); url.searchParams.set('class', selectedClass); url.searchParams.set('day', selectedDay); window.history.replaceState({}, '', url); };
+    const render = (announce = false) => {
+      app.dataset.enhanced = 'true';
+      if (select) select.value = selectedClass;
+      classPanels.forEach((panel) => { const active = panel.dataset.classPanel === selectedClass; panel.classList.toggle('active', active); panel.hidden = !active; panel.querySelectorAll<HTMLElement>('[data-day-panel]').forEach((dayPanel) => { dayPanel.hidden = selectedDay !== 'all' && dayPanel.dataset.dayPanel !== selectedDay; }); panel.querySelector<HTMLElement>('[data-week-grid]')?.classList.toggle('single-day', selectedDay !== 'all'); });
+      dayButtons.forEach((button) => { const active = button.dataset.day === selectedDay; button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active)); });
+      updateUrl();
+      if (announce && liveStatus && select) { const dayName = dayButtons.find((button) => button.dataset.day === selectedDay)?.textContent?.trim(); liveStatus.textContent = `Показано ${select.selectedOptions[0]?.textContent}, ${dayName}.`; }
+    };
+    select?.addEventListener('change', () => { selectedClass = select.value; render(true); });
+    dayButtons.forEach((button) => button.addEventListener('click', () => { selectedDay = button.dataset.day ?? 'all'; render(true); }));
+    copyButton?.addEventListener('click', async () => { try { await navigator.clipboard.writeText(window.location.href); if (copyLabel) copyLabel.textContent = 'Посилання скопійовано'; } catch { window.prompt('Скопіюйте посилання на розклад:', window.location.href); } window.setTimeout(() => { if (copyLabel) copyLabel.textContent = 'Скопіювати посилання'; }, 2200); });
+    render();
+  }
+</script>

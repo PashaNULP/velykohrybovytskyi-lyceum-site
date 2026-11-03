@@ -18,6 +18,24 @@ const optionalAcademicYear = z.preprocess(
   z.string().regex(/^\d{4}–\d{4}$/, 'Навчальний рік має мати формат 2026–2027.').optional(),
 );
 
+const academicYear = z
+  .string({ error: 'Додайте навчальний рік.' })
+  .regex(/^\d{4}–\d{4}$/, 'Навчальний рік має мати формат 2026–2027.');
+
+const optionalShortText = z.preprocess(
+  (value) => value === '' || value === null ? undefined : value,
+  z.string().max(160, 'Текст задовгий: максимум 160 символів.').optional(),
+);
+
+const time = z
+  .string({ error: 'Додайте час у форматі ГГ:ХХ.' })
+  .regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Час має бути у форматі ГГ:ХХ, наприклад 09:00.');
+
+const minutesFromMidnight = (value: string) => {
+  const [hours, minutes] = value.split(':').map(Number);
+  return hours * 60 + minutes;
+};
+
 const slug = z
   .string({ error: 'Додайте унікальний slug.' })
   .min(3, 'Slug має містити щонайменше 3 символи.')
@@ -148,4 +166,125 @@ const galleries = defineCollection({
   }),
 });
 
-export const collections = { news, documents, announcements, galleries };
+const lessonGroup = z.object({
+  name: z.string({ error: 'Додайте назву групи.' }).min(1).max(60),
+  subject: optionalShortText,
+  room: optionalShortText,
+  teacher: optionalShortText,
+  note: optionalShortText,
+});
+
+const lesson = z.object({
+  number: z.number({ error: 'Номер уроку має бути числом.' }).int().min(0).max(12),
+  subject: z.string({ error: 'Додайте назву предмета.' }).min(1).max(120),
+  start: time.optional(),
+  end: time.optional(),
+  room: optionalShortText,
+  teacher: optionalShortText,
+  note: optionalShortText,
+  groups: z.array(lessonGroup).max(6, 'Для одного уроку можна додати максимум 6 груп.').default([]),
+}).superRefine((data, context) => {
+  if (Boolean(data.start) !== Boolean(data.end)) {
+    context.addIssue({ code: 'custom', path: ['start'], message: 'Вкажіть і початок, і завершення уроку або залиште обидва поля порожніми.' });
+  }
+  if (data.start && data.end && minutesFromMidnight(data.end) <= minutesFromMidnight(data.start)) {
+    context.addIssue({ code: 'custom', path: ['end'], message: 'Завершення уроку має бути пізніше за початок.' });
+  }
+});
+
+const scheduleDay = z.object({
+  day: z.enum(['monday', 'tuesday', 'wednesday', 'thursday', 'friday'], {
+    error: 'Оберіть день від понеділка до п’ятниці.',
+  }),
+  lessons: z.array(lesson).max(13, 'В одному дні може бути максимум 13 уроків.'),
+}).superRefine((data, context) => {
+  const numbers = new Set<number>();
+  let previousEnd = -1;
+  data.lessons.forEach((item, index) => {
+    if (numbers.has(item.number)) {
+      context.addIssue({ code: 'custom', path: ['lessons', index, 'number'], message: `Номер уроку ${item.number} повторюється в цьому дні.` });
+    }
+    numbers.add(item.number);
+    if (item.start && item.end) {
+      const start = minutesFromMidnight(item.start);
+      if (start < previousEnd) {
+        context.addIssue({ code: 'custom', path: ['lessons', index, 'start'], message: 'Уроки мають іти за часом і не перетинатися.' });
+      }
+      previousEnd = minutesFromMidnight(item.end);
+    }
+  });
+});
+
+const schedules = defineCollection({
+  loader: glob({ base: './src/content/schedules', pattern: '**/*.md' }),
+  schema: z.object({
+    title: z.string({ error: 'Додайте назву запису розкладу.' }).min(3).max(140),
+    slug,
+    className: z.string({ error: 'Додайте назву класу.' }).min(1).max(30),
+    academicYear,
+    updatedAt: z.coerce.date({ error: 'Додайте дату останнього оновлення.' }),
+    status,
+    sourceUrl,
+    notes: z.string().max(500, 'Примітка задовга: максимум 500 символів.').optional(),
+    days: z.array(scheduleDay).max(5, 'Розклад може містити максимум 5 навчальних днів.'),
+  }).superRefine((data, context) => {
+    const days = new Set<string>();
+    data.days.forEach((item, index) => {
+      if (days.has(item.day)) {
+        context.addIssue({ code: 'custom', path: ['days', index, 'day'], message: 'Цей день тижня вже додано.' });
+      }
+      days.add(item.day);
+    });
+    if (data.status === 'published' && data.days.length === 0) {
+      context.addIssue({ code: 'custom', path: ['days'], message: 'Перед публікацією додайте хоча б один навчальний день.' });
+    }
+    if (data.status === 'published' && !data.sourceUrl) {
+      context.addIssue({ code: 'custom', path: ['sourceUrl'], message: 'Перед публікацією додайте офіційне першоджерело розкладу.' });
+    }
+  }),
+});
+
+const bellLesson = z.object({
+  number: z.number({ error: 'Номер уроку має бути числом.' }).int().min(0).max(12),
+  start: time,
+  end: time,
+  breakAfterMinutes: z.number().int().min(0).max(90).optional(),
+}).superRefine((data, context) => {
+  if (minutesFromMidnight(data.end) <= minutesFromMidnight(data.start)) {
+    context.addIssue({ code: 'custom', path: ['end'], message: 'Завершення уроку має бути пізніше за початок.' });
+  }
+});
+
+const bellSchedules = defineCollection({
+  loader: glob({ base: './src/content/bell-schedules', pattern: '**/*.md' }),
+  schema: z.object({
+    title: z.string({ error: 'Додайте назву групи класів.' }).min(3).max(100),
+    slug,
+    note: z.string().max(240, 'Примітка задовга.').optional(),
+    academicYear,
+    updatedAt: z.coerce.date({ error: 'Додайте дату затвердження або оновлення.' }),
+    status,
+    sourceUrl,
+    documentUrl: sourceUrl,
+    lessons: z.array(bellLesson).min(1, 'Додайте хоча б один урок.').max(13),
+  }).superRefine((data, context) => {
+    const numbers = new Set<number>();
+    let previousEnd = -1;
+    data.lessons.forEach((item, index) => {
+      if (numbers.has(item.number)) {
+        context.addIssue({ code: 'custom', path: ['lessons', index, 'number'], message: `Номер уроку ${item.number} повторюється.` });
+      }
+      numbers.add(item.number);
+      const start = minutesFromMidnight(item.start);
+      if (start < previousEnd) {
+        context.addIssue({ code: 'custom', path: ['lessons', index, 'start'], message: 'Уроки мають іти за часом і не перетинатися.' });
+      }
+      previousEnd = minutesFromMidnight(item.end);
+    });
+    if (data.status === 'published' && (!data.sourceUrl || !data.documentUrl)) {
+      context.addIssue({ code: 'custom', path: ['sourceUrl'], message: 'Перед публікацією додайте офіційну сторінку та документ-першоджерело.' });
+    }
+  }),
+});
+
+export const collections = { news, documents, announcements, galleries, schedules, bellSchedules };

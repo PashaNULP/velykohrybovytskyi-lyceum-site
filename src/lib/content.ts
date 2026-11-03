@@ -51,4 +51,22 @@ export async function getPublishedGalleries(): Promise<CollectionEntry<'gallerie
   return entries.sort((a, b) => (b.data.date?.valueOf() ?? 0) - (a.data.date?.valueOf() ?? 0));
 }
 
+export async function getPublishedSchedules(): Promise<CollectionEntry<'schedules'>[]> {
+  const entries = await getCollection('schedules', ({ data }) => data.status === 'published');
+  assertUniqueSlugs(entries, 'schedules');
+  return entries.sort((a, b) => a.data.className.localeCompare(b.data.className, 'uk', { numeric: true }));
+}
+
+export async function getPublishedBellSchedules(): Promise<CollectionEntry<'bellSchedules'>[]> {
+  const entries = await getCollection('bellSchedules', ({ data }) => data.status === 'published');
+  assertUniqueSlugs(entries, 'bellSchedules');
+  const order = ['grade-1', 'grades-2-4', 'grades-5-11'];
+  return entries.sort((a, b) => {
+    const aIndex = order.indexOf(a.data.slug);
+    const bIndex = order.indexOf(b.data.slug);
+    return (aIndex < 0 ? order.length : aIndex) - (bIndex < 0 ? order.length : bIndex)
+      || a.data.title.localeCompare(b.data.title, 'uk', { numeric: true });
+  });
+}
+
 export const formatDate = (date: Date) => new Intl.DateTimeFormat('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' }).format(date);
