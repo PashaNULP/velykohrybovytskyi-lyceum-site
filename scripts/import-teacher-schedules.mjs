@@ -23,7 +23,11 @@ const weekdayByNumber = new Map([[1, 'monday'], [2, 'tuesday'], [3, 'wednesday']
 const quote = (value) => JSON.stringify(String(value));
 const classNumber = (className) => Number(className.match(/^\d+/)?.[0] ?? 99);
 const classSlug = (className) => className.toLowerCase().replace('а', 'a').replace('б', 'b').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-const teacherSurname = (fullName) => fullName.trim().split(/\s+/)[0];
+const teacherShortName = (fullName) => {
+  const [surname, ...names] = fullName.trim().split(/\s+/);
+  const initials = names.map((name) => `${name[0]}.`).join(' ');
+  return [surname, initials].filter(Boolean).join(' ');
+};
 
 function parseBellSchedule(path) {
   const source = readFileSync(path, 'utf8');
@@ -76,14 +80,14 @@ for (const [className, classLessons] of [...classes].sort(([left], [right]) => c
       end: time?.end,
       room: slotLessons.length === 1 ? first.classroom : undefined,
       teacher: subjects.length === 1
-        ? [...new Set(slotLessons.map((lesson) => teacherSurname(lesson.teacher)))].join(' / ')
+        ? [...new Set(slotLessons.map((lesson) => teacherShortName(lesson.teacher)))].join(' / ')
         : undefined,
       groups: subjects.length > 1
         ? [...slotLessons].sort((left, right) => left.subject.localeCompare(right.subject, 'uk')).map((lesson, index) => ({
             name: `Підгрупа ${index + 1}`,
             subject: lesson.subject,
             room: lesson.classroom,
-            teacher: teacherSurname(lesson.teacher),
+            teacher: teacherShortName(lesson.teacher),
           }))
         : [],
     };

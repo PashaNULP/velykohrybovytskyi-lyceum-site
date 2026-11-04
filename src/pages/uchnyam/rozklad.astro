@@ -33,27 +33,31 @@ const officialDocument = bellSchedules.find((entry) => entry.data.documentUrl)?.
             </div>
             <p class="sr-only" aria-live="polite" data-live-status></p>
             <div class="class-schedules">
-              {schedules.map((schedule, scheduleIndex) => (
-                <article class:list={['class-schedule-panel', { active: scheduleIndex === 0 }]} data-class-panel={schedule.data.slug} aria-labelledby={`class-${schedule.data.slug}`}>
+              {schedules.map((schedule, scheduleIndex) => {
+                const lessonNumbers = [...new Set(schedule.data.days.flatMap((day) => day.lessons.map((lesson) => lesson.number)))].sort((left, right) => left - right);
+                return <article class:list={['class-schedule-panel', { active: scheduleIndex === 0 }]} data-class-panel={schedule.data.slug} aria-labelledby={`class-${schedule.data.slug}`}>
                   <header class="class-schedule-header"><div><span class="eyebrow">{schedule.data.academicYear} навчальний рік</span><h3 id={`class-${schedule.data.slug}`}>{schedule.data.className}</h3></div><span>Оновлено {formatDate(schedule.data.updatedAt)}</span></header>
                   {schedule.data.notes && <p class="schedule-note">{schedule.data.notes}</p>}
-                  <div class="week-schedule-grid" data-week-grid>
+                  <div class="week-schedule-grid" data-week-grid style={`--schedule-row-count:${lessonNumbers.length}`}>
                     {weekdays.map(([dayValue, dayLabel]) => {
                       const day = schedule.data.days.find((item) => item.day === dayValue);
                       return <section class="schedule-day" data-day-panel={dayValue} aria-labelledby={`${schedule.data.slug}-${dayValue}`}>
                         <h4 id={`${schedule.data.slug}-${dayValue}`}>{dayLabel}</h4>
-                        {day && day.lessons.length > 0 ? <div class="subject-list">{day.lessons.map((lesson) => <article class="subject-row">
-                          <strong class="subject-number">{lesson.number}</strong>
-                          <div class="subject-main"><strong>{lesson.subject}</strong>{(lesson.room || lesson.teacher || lesson.note) && <span>{[lesson.room && `Кабінет ${lesson.room}`, lesson.teacher, lesson.note].filter(Boolean).join(' · ')}</span>}
-                            {lesson.groups.length > 0 && <ul class="lesson-groups" aria-label="Поділ на групи">{lesson.groups.map((group) => <li><b>{group.name}:</b> {[group.subject, group.room && `каб. ${group.room}`, group.teacher, group.note].filter(Boolean).join(' · ')}</li>)}</ul>}
-                          </div>
-                          {lesson.start && lesson.end && <time class="subject-time">{lesson.start}–{lesson.end}</time>}
-                        </article>)}</div> : <p class="day-empty">Для цього дня уроки не вказані.</p>}
+                        <div class="subject-list">{lessonNumbers.map((lessonNumber) => {
+                          const lesson = day?.lessons.find((item) => item.number === lessonNumber);
+                          return lesson ? <article class="subject-row">
+                            <strong class="subject-number">{lesson.number}</strong>
+                            <div class="subject-main"><strong>{lesson.subject}</strong>{(lesson.room || lesson.teacher || lesson.note) && <span>{[lesson.room && `Кабінет ${lesson.room}`, lesson.teacher, lesson.note].filter(Boolean).join(' · ')}</span>}
+                              {lesson.groups.length > 0 && <ul class="lesson-groups" aria-label="Поділ на групи">{lesson.groups.map((group) => <li><b>{group.name}:</b> {[group.subject, group.room && `каб. ${group.room}`, group.teacher, group.note].filter(Boolean).join(' · ')}</li>)}</ul>}
+                            </div>
+                            {lesson.start && lesson.end && <time class="subject-time">{lesson.start}–{lesson.end}</time>}
+                          </article> : <div class="subject-row subject-row-empty"><span class="subject-number" aria-hidden="true">{lessonNumber}</span><span>Немає уроку</span></div>;
+                        })}</div>
                       </section>;
                     })}
                   </div>
-                </article>
-              ))}
+                </article>;
+              })}
             </div>
           </div>
         ) : (
