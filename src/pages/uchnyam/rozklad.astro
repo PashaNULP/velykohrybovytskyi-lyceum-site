@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Icon from '../../components/ui/Icon.astro';
+import InnerHeader from '../../components/ui/InnerHeader.astro';
 import { formatDate, getPublishedBellSchedules, getPublishedSchedules } from '../../lib/content';
 
 const [schedules, bellSchedules] = await Promise.all([getPublishedSchedules(), getPublishedBellSchedules()]);
@@ -24,15 +25,13 @@ const subjectTone = (subject: string) => {
 ---
 
 <BaseLayout title="Розклад уроків і дзвінків · Великогрибовицький ліцей" description="Актуальний розклад уроків за класами та розклад дзвінків Великогрибовицького ліцею.">
+  <InnerHeader title="Розклад" description={`Уроки за класами та час дзвінків на ${currentAcademicYear} навчальний рік.`} />
   <main class="schedule-main" data-schedule-page>
     <div class="container schedule-page-shell schedule-wide-container">
-      <header class="schedule-page-header">
-        <div><span class="eyebrow">Для учнів і батьків</span><h1>Розклад</h1><p>{currentAcademicYear} навчальний рік</p></div>
-        <div class="schedule-view-tabs" role="tablist" aria-label="Вид розкладу">
-          <button id="schedule-tab-lessons" class="schedule-view-tab active" type="button" role="tab" aria-selected="true" aria-controls="schedule-panel-lessons" tabindex="0" data-view-tab="lessons">Розклад уроків</button>
-          <button id="schedule-tab-bells" class="schedule-view-tab" type="button" role="tab" aria-selected="false" aria-controls="schedule-panel-bells" tabindex="-1" data-view-tab="bells">Розклад дзвінків</button>
-        </div>
-      </header>
+      <div class="schedule-view-tabs" role="tablist" aria-label="Вид розкладу">
+        <button id="schedule-tab-lessons" class="schedule-view-tab active" type="button" role="tab" aria-selected="true" aria-controls="schedule-panel-lessons" tabindex="0" data-view-tab="lessons">Розклад уроків</button>
+        <button id="schedule-tab-bells" class="schedule-view-tab" type="button" role="tab" aria-selected="false" aria-controls="schedule-panel-bells" tabindex="-1" data-view-tab="bells">Розклад дзвінків</button>
+      </div>
 
       <section id="schedule-panel-lessons" class="schedule-view-panel" role="tabpanel" aria-labelledby="schedule-tab-lessons" data-view-panel="lessons">
         <span id="lesson-schedule-title" class="legacy-anchor" aria-hidden="true"></span>
