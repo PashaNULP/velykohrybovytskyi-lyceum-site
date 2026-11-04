@@ -81,3 +81,11 @@
 .content-photo img{position:relative;inset:auto;display:block;width:auto;max-width:100%;height:auto;max-height:min(70vh,680px);object-fit:contain;border-radius:9px;z-index:1;transition:none}
 .content-photo:hover img{transform:none}
 @media(max-width:700px){.article-layout .article-hero:has(.article-real-photo){min-height:0;padding:7px}.article-hero .article-real-photo,.article-prose img{max-height:68vh;border-radius:10px}.content-photo{min-height:120px;padding:6px}.content-photo img{max-height:68vh}}
+
+/* The public schedule always shows the complete week; only the class is selectable. */
+.schedule-controls{grid-template-columns:minmax(180px,260px) auto;justify-content:space-between}.schedule-controls .copy-schedule-link{grid-column:auto;justify-self:end}
+@media(max-width:700px){.schedule-controls{grid-template-columns:1fr}.schedule-controls .copy-schedule-link{width:100%;justify-self:stretch}}
+
+/* Align equal lesson numbers across all five weekday columns on wide screens. */
+@media(min-width:1051px){.week-schedule-grid{grid-template-rows:auto repeat(var(--schedule-row-count),auto)}.schedule-day{display:grid;grid-row:1/-1;grid-template-rows:subgrid}.schedule-day h4{grid-row:1}.schedule-day .subject-list{display:grid;grid-row:2/-1;grid-template-rows:subgrid}.subject-row-empty{align-content:center;color:#91a09f;background:#fafbf9}.subject-row-empty>span:last-child{font-size:11px}}
+@media(max-width:1050px){.subject-row-empty{display:none}}

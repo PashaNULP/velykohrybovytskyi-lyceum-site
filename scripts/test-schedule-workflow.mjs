@@ -62,14 +62,15 @@ try {
   build();
   let page = readFileSync(join(testRoot, 'dist/uchnyam/rozklad/index.html'), 'utf8');
   assert(!page.includes('data-class-panel="test-7-a"'), 'Чернетка розкладу стала публічною.');
-  assert(page.includes('Розклад уроків для цього класу поки не опубліковано'), 'Не показано коректний порожній стан.');
+  assert(page.includes('data-class-panel="1-a"'), 'Опубліковані розклади зникли під час перевірки чернетки.');
 
   writeFileSync(schedulePath, schedule('published'));
   build();
   page = readFileSync(join(testRoot, 'dist/uchnyam/rozklad/index.html'), 'utf8');
   assert(page.includes('7-А клас'), 'Опублікований розклад не з’явився на сторінці.');
   assert(page.includes('data-class-panel="test-7-a"'), 'Немає панелі класу для перемикання.');
-  assert(page.includes('data-day="monday"'), 'Немає перемикача дня тижня.');
+  assert(page.includes('data-day-panel="monday"') && page.includes('data-day-panel="friday"'), 'Не показано повний навчальний тиждень.');
+  assert(!page.includes('data-day="monday"'), 'На сторінці залишився зайвий перемикач окремого дня.');
   assert(page.includes('Українська мова'), 'Предмети не потрапили до публічної сторінки.');
   assert(page.includes('Група 1'), 'Поділ уроку на групи не відображається.');
 
