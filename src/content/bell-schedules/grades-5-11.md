@@ -43,4 +43,8 @@ lessons:
   - number: 8
     start: "15:45"
     end: "16:30"
+    breakAfterMinutes: 5
+  - number: 9
+    start: "16:35"
+    end: "17:20"
 ---
