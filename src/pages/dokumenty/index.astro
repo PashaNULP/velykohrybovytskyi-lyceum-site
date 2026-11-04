@@ -42,8 +42,7 @@ const categories = [...new Set(documents.map((item) => item.data.category))];
                   <span class="doc-summary">{data.summary}</span>
                 </span>
                 <span class="doc-actions">
-                  <a class="btn btn-outline" href={documentUrl} target="_blank" rel="noopener noreferrer">Переглянути</a>
-                  {isLocalPdf ? <a class="btn btn-dark" href={documentUrl} download>Завантажити</a> : <a class="btn btn-dark" href={documentUrl} target="_blank" rel="noopener noreferrer">Офіційне джерело</a>}
+                  {isLocalPdf ? <><a class="btn btn-outline" href={documentUrl} target="_blank" rel="noopener noreferrer">Переглянути</a><a class="btn btn-dark" href={documentUrl} download>Завантажити</a></> : <a class="btn btn-dark" href={documentUrl} target="_blank" rel="noopener noreferrer">Відкрити документ</a>}
                 </span>
               </article>
               );

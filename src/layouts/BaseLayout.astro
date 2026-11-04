@@ -1,6 +1,7 @@
 ---
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
+import Lightbox from '../components/media/Lightbox.astro';
 import '../styles/global.css';
 import { site } from '../data/site';
 
@@ -39,6 +40,7 @@ const robots = isPublicProduction ? 'index,follow' : 'noindex,nofollow,noarchive
     <Header currentPath={Astro.url.pathname} />
     <main id="main-content"><slot /></main>
     <Footer />
+    <Lightbox />
     <script>
       document.querySelectorAll<HTMLImageElement>('[data-fallback-image]').forEach((image) => {
         image.addEventListener('error', () => { image.hidden = true; });
