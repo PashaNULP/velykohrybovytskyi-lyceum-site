@@ -27,7 +27,7 @@ const subjectTone = (subject: string) => {
 <BaseLayout title="Розклад уроків і дзвінків · Великогрибовицький ліцей" description="Актуальний розклад уроків за класами та розклад дзвінків Великогрибовицького ліцею.">
   <InnerHeader title="Розклад" description={`Уроки за класами та час дзвінків на ${currentAcademicYear} навчальний рік.`} />
   <main class="schedule-main" data-schedule-page>
-    <div class="container schedule-page-shell schedule-wide-container">
+    <div class="container container-wide schedule-page-shell">
       <div class="schedule-view-tabs" role="tablist" aria-label="Вид розкладу">
         <button id="schedule-tab-lessons" class="schedule-view-tab active" type="button" role="tab" aria-selected="true" aria-controls="schedule-panel-lessons" tabindex="0" data-view-tab="lessons">Розклад уроків</button>
         <button id="schedule-tab-bells" class="schedule-view-tab" type="button" role="tab" aria-selected="false" aria-controls="schedule-panel-bells" tabindex="-1" data-view-tab="bells">Розклад дзвінків</button>

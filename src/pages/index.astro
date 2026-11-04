@@ -32,7 +32,7 @@ const homePhotos = galleries.flatMap(({ data }) => data.photos).slice(0, 6);
     <div class="container">
       <div class="section-top"><div><span class="eyebrow">Обличчя нашого ліцею</span><h2 class="section-title" id="gallery-title">Життя у світлинах</h2><p class="section-sub">Події, зустрічі та щоденні моменти з життя нашої ліцейної спільноти.</p></div><a class="text-link" href="/halerei/">Усі фотогалереї <Icon name="arrow-right" /></a></div>
       <div class:list={['school-gallery', { 'school-gallery-four': homePhotos.length === 4 }]}>
-        {homePhotos.map((photo) => <div class="gallery-shot"><div class="gallery-fallback"><Icon name="book" /><span>Фото ліцею</span></div><ContentImage class="gallery-photo" src={photo.src} alt={photo.alt} sizes="(max-width: 700px) 50vw, 33vw" /></div>)}
+        {homePhotos.map((photo) => <div class="gallery-shot"><div class="gallery-fallback"><Icon name="book" /><span>Фото ліцею</span></div><ContentImage class="gallery-photo" src={photo.src} alt={photo.alt} sizes="(max-width: 700px) 50vw, 33vw" lightbox lightboxGroup="home-photos" caption={photo.caption ?? photo.alt} /></div>)}
       </div>
       {featuredGallery && <a class="text-link gallery-collection-link" href={`/halerei/${featuredGallery.data.slug}/`}>Відкрити фотогалерею <Icon name="arrow-right" /></a>}
     </div>

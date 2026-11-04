@@ -1,0 +1,117 @@
+<div class="site-lightbox" data-lightbox hidden aria-hidden="true">
+  <div class="lightbox-dialog" role="dialog" aria-modal="true" aria-label="Перегляд фотографії">
+    <button class="lightbox-close" type="button" data-lightbox-close aria-label="Закрити перегляд">×</button>
+    <button class="lightbox-arrow lightbox-prev" type="button" data-lightbox-prev aria-label="Попередня фотографія">←</button>
+    <figure class="lightbox-figure">
+      <img data-lightbox-image alt="" />
+      <figcaption data-lightbox-caption aria-live="polite"></figcaption>
+    </figure>
+    <button class="lightbox-arrow lightbox-next" type="button" data-lightbox-next aria-label="Наступна фотографія">→</button>
+    <span class="lightbox-counter" data-lightbox-counter aria-live="polite"></span>
+  </div>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-lightbox]');
+
+  if (root && root.dataset.ready !== 'true') {
+    root.dataset.ready = 'true';
+    const image = root.querySelector<HTMLImageElement>('[data-lightbox-image]')!;
+    const caption = root.querySelector<HTMLElement>('[data-lightbox-caption]')!;
+    const counter = root.querySelector<HTMLElement>('[data-lightbox-counter]')!;
+    const dialog = root.querySelector<HTMLElement>('.lightbox-dialog')!;
+    const figure = root.querySelector<HTMLElement>('.lightbox-figure')!;
+    const closeButton = root.querySelector<HTMLButtonElement>('[data-lightbox-close]')!;
+    const previousButton = root.querySelector<HTMLButtonElement>('[data-lightbox-prev]')!;
+    const nextButton = root.querySelector<HTMLButtonElement>('[data-lightbox-next]')!;
+    let items: HTMLElement[] = [];
+    let currentIndex = 0;
+    let returnFocus: HTMLElement | null = null;
+    let touchStartX = 0;
+
+    const allTriggers = () => Array.from(document.querySelectorAll<HTMLElement>('[data-lightbox-trigger]'));
+
+    const show = (index: number) => {
+      if (!items.length) return;
+      currentIndex = (index + items.length) % items.length;
+      const trigger = items[currentIndex];
+      const source = trigger.dataset.lightboxSrc;
+      if (!source) return;
+      image.src = source;
+      image.alt = trigger.getAttribute('alt') ?? '';
+      caption.textContent = trigger.dataset.lightboxCaption ?? image.alt;
+      caption.hidden = !caption.textContent;
+      const hasMultiple = items.length > 1;
+      previousButton.hidden = !hasMultiple;
+      nextButton.hidden = !hasMultiple;
+      counter.hidden = !hasMultiple;
+      counter.textContent = hasMultiple ? `${currentIndex + 1} / ${items.length}` : '';
+    };
+
+    const open = (trigger: HTMLElement) => {
+      const group = trigger.dataset.lightboxGroup;
+      items = group
+        ? allTriggers().filter((item) => item.dataset.lightboxGroup === group)
+        : [trigger];
+      currentIndex = Math.max(0, items.indexOf(trigger));
+      returnFocus = trigger;
+      root.hidden = false;
+      root.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('lightbox-open');
+      show(currentIndex);
+      closeButton.focus();
+    };
+
+    const close = () => {
+      if (root.hidden) return;
+      root.hidden = true;
+      root.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('lightbox-open');
+      image.removeAttribute('src');
+      returnFocus?.focus();
+    };
+
+    allTriggers().forEach((trigger) => {
+      trigger.addEventListener('click', () => open(trigger));
+      trigger.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          open(trigger);
+        }
+      });
+    });
+
+    closeButton.addEventListener('click', close);
+    previousButton.addEventListener('click', () => show(currentIndex - 1));
+    nextButton.addEventListener('click', () => show(currentIndex + 1));
+    root.addEventListener('click', (event) => {
+      if (event.target === root || event.target === dialog || event.target === figure) close();
+    });
+    root.addEventListener('touchstart', (event) => {
+      touchStartX = event.changedTouches[0]?.clientX ?? 0;
+    }, { passive: true });
+    root.addEventListener('touchend', (event) => {
+      const distance = (event.changedTouches[0]?.clientX ?? touchStartX) - touchStartX;
+      if (Math.abs(distance) > 55 && items.length > 1) show(currentIndex + (distance < 0 ? 1 : -1));
+    }, { passive: true });
+
+    document.addEventListener('keydown', (event) => {
+      if (root.hidden) return;
+      if (event.key === 'Escape') close();
+      if (event.key === 'ArrowLeft') show(currentIndex - 1);
+      if (event.key === 'ArrowRight') show(currentIndex + 1);
+      if (event.key === 'Tab') {
+        const controls = [closeButton, previousButton, nextButton].filter((button) => !button.hidden);
+        const first = controls[0];
+        const last = controls.at(-1);
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
+    });
+  }
+</script>

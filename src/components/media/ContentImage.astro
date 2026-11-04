@@ -10,6 +10,10 @@ interface Props {
   height?: number;
   focusX?: number;
   focusY?: number;
+  lightbox?: boolean;
+  lightboxGroup?: string;
+  caption?: string;
+  fullSrc?: string;
 }
 
 const {
@@ -23,6 +27,10 @@ const {
   height,
   focusX,
   focusY,
+  lightbox = false,
+  lightboxGroup,
+  caption,
+  fullSrc,
 } = Astro.props;
 
 const focusStyle = focusX === undefined && focusY === undefined
@@ -42,4 +50,11 @@ const focusStyle = focusX === undefined && focusY === undefined
   decoding="async"
   fetchpriority={fetchpriority}
   data-fallback-image
+  data-lightbox-trigger={lightbox ? '' : undefined}
+  data-lightbox-src={lightbox ? (fullSrc ?? src) : undefined}
+  data-lightbox-group={lightbox ? lightboxGroup : undefined}
+  data-lightbox-caption={lightbox ? (caption ?? alt) : undefined}
+  role={lightbox ? 'button' : undefined}
+  tabindex={lightbox ? 0 : undefined}
+  aria-label={lightbox ? `Відкрити фотографію: ${alt}` : undefined}
 />
