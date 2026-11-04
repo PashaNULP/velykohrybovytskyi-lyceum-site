@@ -13,10 +13,14 @@ const parents = readPage('batkam');
 const documents = readPage('dokumenty');
 const article = readPage('novyny/uchnivske-samovriaduvannia-plany-2026');
 const gallery = readPage('halerei/power4girls-zapal');
+const schedule = readPage('uchnyam/rozklad');
 
 assert(home.includes('href="/uchnyam/rozklad/"') && home.includes('>Розклад<'), 'У головній навігації немає прямого розкладу.');
-assert(home.includes('/uchnyam/rozklad/#lesson-schedule-title'), 'На головній немає прямого переходу до розкладу уроків.');
-assert(home.includes('/uchnyam/rozklad/#bell-schedule-title'), 'На головній немає прямого переходу до розкладу дзвінків.');
+assert(home.includes('/uchnyam/rozklad/?view=lessons'), 'На головній немає прямого переходу до розкладу уроків.');
+assert(home.includes('/uchnyam/rozklad/?view=bells&amp;group=5-11'), 'На головній немає прямого переходу до розкладу дзвінків.');
+assert((schedule.match(/<h1/g) ?? []).length === 1 && schedule.includes('<h1>Розклад</h1>'), 'Сторінка розкладу повинна мати один компактний H1.');
+assert(schedule.includes('role="tablist"') && schedule.includes('data-view-tab="lessons"') && schedule.includes('data-view-tab="bells"'), 'На сторінці немає доступних вкладок уроків і дзвінків.');
+assert(schedule.includes('id="lesson-schedule-title"') && schedule.includes('id="bell-schedule-title"'), 'Старі якірні посилання на розклади не підтримуються.');
 assert(home.includes('href="/oholoshennia/"') && home.includes('href="/kontakty/"'), 'На головній бракує оголошень або контактів.');
 assert(home.includes('data-menu-toggle') && home.includes('aria-expanded="false"') && home.includes('aria-controls="mobile-navigation"'), 'Mobile-menu не має потрібних ARIA-атрибутів.');
 
