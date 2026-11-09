@@ -20,3 +20,8 @@ export const navigation = [
 export const officialLinks = {
   admissionRules: 'https://www.hrybovychi-school.com.ua/інформаційна-відкритість/правила-прийому-до-закладу',
 } as const;
+
+export const socialLinks = [
+  { label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=100063934453544', icon: 'facebook' },
+  { label: 'TikTok', href: 'https://www.tiktok.com/@v.hrybovychi.lyceum', icon: 'tiktok' },
+] as const;

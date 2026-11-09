@@ -1,5 +1,5 @@
 ---
-type IconName = 'arrow-right' | 'arrow-up-right' | 'external' | 'calendar' | 'book' | 'file' | 'users' | 'check' | 'map-pin' | 'phone' | 'menu' | 'star';
+type IconName = 'arrow-right' | 'arrow-up-right' | 'external' | 'calendar' | 'book' | 'file' | 'users' | 'check' | 'map-pin' | 'phone' | 'menu' | 'star' | 'facebook' | 'tiktok';
 
 interface Props {
   name: IconName;
@@ -20,6 +20,8 @@ const paths: Record<IconName, string> = {
   phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2c-9-.9-16-7.9-16.9-16.9A2 2 0 0 1 4.9 2h3a2 2 0 0 1 2 1.7l.6 3a2 2 0 0 1-.6 1.8L8 10.3a15 15 0 0 0 5.7 5.7l1.8-1.9a2 2 0 0 1 1.8-.5l3 .6a2 2 0 0 1 1.7 2.1z"/>',
   menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
   star: '<path d="m12 2 2.7 6.7L22 12l-7.3 3.3L12 22l-2.7-6.7L2 12l7.3-3.3z"/>',
+  facebook: '<path d="M14 8h3V4h-3c-3 0-5 2-5 5v3H6v4h3v6h4v-6h3l1-4h-4V9c0-.6.4-1 1-1Z"/>',
+  tiktok: '<path d="M15 3v11a5 5 0 1 1-4-4.9"/><path d="M15 3c.8 3 2.8 4.7 6 5"/>',
 };
 ---
 
