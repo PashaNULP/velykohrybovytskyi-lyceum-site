@@ -5,9 +5,9 @@ import { navigation } from '../../data/site';
 interface Props { currentPath: string }
 const { currentPath } = Astro.props;
 const isPathActive = (href: string) => currentPath.startsWith(new URL(href, 'https://site.local').pathname);
-const isItemActive = (item: typeof navigation[number]) => 'href' in item
-  ? isPathActive(item.href)
-  : item.children.some((child) => isPathActive(child.href));
+const isItemActive = (item: typeof navigation[number]) =>
+  ('href' in item && isPathActive(item.href))
+  || ('children' in item && item.children.some((child) => isPathActive(child.href)));
 ---
 
 <div class="mobile-menu" data-mobile-menu>
@@ -27,9 +27,7 @@ const isItemActive = (item: typeof navigation[number]) => 'href' in item
       <div class:list={['mobile-nav-group', { active: isItemActive(item) }]} data-mobile-nav-group>
         {'children' in item ? <>
           <div class="mobile-nav-parent">
-            {'href' in item
-              ? <a class:list={['nav-link', { active: isItemActive(item) }]} aria-current={isItemActive(item) ? 'page' : undefined} href={item.href}>{item.label}</a>
-              : <span class:list={['nav-link', 'mobile-nav-label', { active: isItemActive(item) }]}>{item.label}</span>}
+            <a class:list={['nav-link', { active: isItemActive(item) }]} aria-current={isItemActive(item) ? 'page' : undefined} href={item.href}>{item.label}</a>
             <button class="mobile-submenu-toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-controls={`mobile-submenu-${index}`} aria-label={`Розгорнути підменю «${item.label}»`} data-mobile-submenu-toggle><span class="submenu-chevron" aria-hidden="true"></span></button>
           </div>
           <div class="mobile-submenu" id={`mobile-submenu-${index}`} data-mobile-submenu hidden>

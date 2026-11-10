@@ -6,9 +6,9 @@ import { navigation, site } from '../../data/site';
 interface Props { currentPath: string }
 const { currentPath } = Astro.props;
 const isPathActive = (href: string) => currentPath.startsWith(new URL(href, 'https://site.local').pathname);
-const isItemActive = (item: typeof navigation[number]) => 'href' in item
-  ? isPathActive(item.href)
-  : item.children.some((child) => isPathActive(child.href));
+const isItemActive = (item: typeof navigation[number]) =>
+  ('href' in item && isPathActive(item.href))
+  || ('children' in item && item.children.some((child) => isPathActive(child.href)));
 ---
 
 <div class="top-strip">
@@ -28,10 +28,8 @@ const isItemActive = (item: typeof navigation[number]) => 'href' in item
         <div class:list={['desktop-nav-item', { 'has-submenu': 'children' in item, active: isItemActive(item) }]} data-desktop-nav-item>
           {'children' in item ? <>
             <div class="desktop-nav-parent">
-              {'href' in item
-                ? <a class:list={['nav-link', { active: isItemActive(item) }]} aria-current={isItemActive(item) ? 'page' : undefined} href={item.href}>{item.label}</a>
-                : <button class:list={['nav-link', 'nav-parent-label', { active: isItemActive(item) }]} type="button" aria-expanded="false" aria-haspopup="true" aria-controls={`desktop-submenu-${index}`} data-desktop-submenu-toggle><span>{item.label}</span><span class="submenu-chevron" aria-hidden="true"></span></button>}
-              {'href' in item && <button class="nav-submenu-toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-controls={`desktop-submenu-${index}`} aria-label={`Відкрити підменю «${item.label}»`} data-desktop-submenu-toggle><span class="submenu-chevron" aria-hidden="true"></span></button>}
+              <a class:list={['nav-link', { active: isItemActive(item) }]} aria-current={isItemActive(item) ? 'page' : undefined} href={item.href}>{item.label}</a>
+              <button class="nav-submenu-toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-controls={`desktop-submenu-${index}`} aria-label={`Відкрити підменю «${item.label}»`} data-desktop-submenu-toggle><span class="submenu-chevron" aria-hidden="true"></span></button>
             </div>
             <div class="desktop-submenu" id={`desktop-submenu-${index}`} data-desktop-submenu>
               <div class="desktop-submenu-inner">{item.children.map((child) => <a href={child.href}>{child.label}</a>)}</div>
