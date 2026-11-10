@@ -11,7 +11,7 @@ photos:
     alt: Учениці ліцею біля стенда POWER4Girls
   - src: /media/images/lyceum/power4girls-02.jpg
     alt: Команда шкільного підприємства ЗАПАЛ представляє власні вироби
-status: published
+status: review
 sourceUrl: https://www.facebook.com/profile.php?id=100063934453544
 date: 2026-11-02
 ---
