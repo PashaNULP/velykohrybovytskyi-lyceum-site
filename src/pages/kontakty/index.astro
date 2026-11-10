@@ -2,10 +2,10 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import InnerHeader from '../../components/ui/InnerHeader.astro';
 import Icon from '../../components/ui/Icon.astro';
-import { site } from '../../data/site';
+import { site, socialLinks } from '../../data/site';
 const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('с. Великі Грибовичі вул. Стуса 1а');
 ---
 <BaseLayout title="Контакти · Великогрибовицький ліцей" description="Адреса і контактна інформація Великогрибовицького ліцею.">
   <InnerHeader title="Контакти" description="Ми поруч із вами. Адреса, телефон і зручний спосіб знайти наш ліцей." />
-  <section class="content-section"><div class="container"><div class="contact-layout"><article class="info-card"><span class="eyebrow">Завітайте до нас</span><h2 class="contact-title">Будемо раді допомогти</h2><p>{site.fullName}</p><div class="contact-details"><div><span class="news-category">Адреса</span><p>{site.address}</p></div><div><span class="news-category">Телефон</span><p><a class="contact-phone" href={site.phoneHref}>{site.phone}</a></p></div></div></article><div class="map-frame" aria-label="Схематичний фон, не географічна карта"><div class="map-pin"><Icon name="map-pin" /><strong>Наш ліцей</strong><span>Великі Грибовичі, Стуса, 1а</span><a target="_blank" rel="noopener noreferrer" href={maps}>Відкрити в Google Maps ↗</a></div></div></div></div></section>
+  <section class="content-section"><div class="container"><div class="contact-layout"><article class="info-card"><span class="eyebrow">Завітайте до нас</span><h2 class="contact-title">Будемо раді допомогти</h2><p>{site.fullName}</p><div class="contact-details"><div><span class="news-category">Адреса</span><p>{site.address}</p></div><div><span class="news-category">Телефон</span><p><a class="contact-phone" href={site.phoneHref}>{site.phone}</a></p></div></div><div class="contact-social"><h3>Ми в соцмережах</h3><div class="social-links">{socialLinks.map((social) => <a class="social-link" href={social.href} target="_blank" rel="noopener noreferrer" aria-label={`${social.label} Великогрибовицького ліцею — відкрити в новій вкладці`}><Icon name={social.icon} /><span>{social.label}</span></a>)}</div></div></article><div class="map-frame" aria-label="Схематичний фон, не географічна карта"><div class="map-pin"><Icon name="map-pin" /><strong>Наш ліцей</strong><span>Великі Грибовичі, Стуса, 1а</span><a target="_blank" rel="noopener noreferrer" href={maps}>Відкрити в Google Maps ↗</a></div></div></div></div></section>
 </BaseLayout>

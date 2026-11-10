@@ -21,11 +21,11 @@ const documents = [
   <section class="content-section"><div class="container parent-hub">
     <nav class="action-grid" aria-label="Основне для батьків">{actions.map((action) => <a href={action.href} target={action.external ? '_blank' : undefined} rel={action.external ? 'noopener noreferrer' : undefined}><span class="card-icon"><Icon name={action.icon} /></span><span><strong>{action.title}</strong><small>{action.text}</small></span><Icon name={action.external ? 'external' : 'arrow-right'} /></a>)}</nav>
     <div class="parent-columns">
-      <section class="hub-section" aria-labelledby="parent-documents-title">
+      <section class="hub-section" id="orhanizatsiia-navchannia" aria-labelledby="parent-documents-title">
         <div class="hub-heading"><div><span class="eyebrow">Навчання</span><h2 id="parent-documents-title">Основні документи</h2></div><a class="text-link" href="/dokumenty/">Увесь каталог <Icon name="arrow-right" /></a></div>
         <div class="resource-list compact">{documents.map((document) => <a class="resource-row" href={document.href}><span><strong>{document.title}</strong><small>{document.meta}</small></span><Icon name="arrow-right" /></a>)}</div>
       </section>
-      <aside class="contact-panel"><span class="eyebrow">Зарахування та довідки</span><h2>Офіційні правила прийому</h2><p>Перегляньте чинний порядок і перелік документів на офіційній сторінці ліцею. Індивідуальні питання можна уточнити в адміністрації.</p><div class="contact-panel-actions"><a class="btn btn-dark" href={officialLinks.admissionRules} target="_blank" rel="noopener noreferrer">Правила зарахування <Icon name="external" /></a><a class="text-link" href="/kontakty/">Контакти адміністрації <Icon name="arrow-right" /></a></div></aside>
+      <aside class="contact-panel" id="zarahuvannia"><span class="eyebrow">Зарахування та довідки</span><h2>Офіційні правила прийому</h2><p>Перегляньте чинний порядок і перелік документів на офіційній сторінці ліцею. Індивідуальні питання можна уточнити в адміністрації.</p><div class="contact-panel-actions"><a class="btn btn-dark" href={officialLinks.admissionRules} target="_blank" rel="noopener noreferrer">Правила зарахування <Icon name="external" /></a><a class="text-link" href="/kontakty/">Контакти адміністрації <Icon name="arrow-right" /></a></div></aside>
     </div>
   </div></section>
 </BaseLayout>

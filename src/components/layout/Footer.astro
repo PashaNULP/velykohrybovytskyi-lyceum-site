@@ -1,6 +1,6 @@
 ---
 import Icon from '../ui/Icon.astro';
-import { site } from '../../data/site';
+import { site, socialLinks } from '../../data/site';
 ---
 
 <footer class="footer">
@@ -30,6 +30,7 @@ import { site } from '../../data/site';
         <h2>Зв'яжіться з нами</h2>
         <div class="footer-contact"><Icon name="map-pin" /> <span>с. Великі Грибовичі,<br />вул. Стуса, 1а</span></div>
         <div class="footer-contact"><Icon name="phone" /><a href={site.phoneHref}>{site.phone}</a></div>
+        <div class="footer-social"><h3>Ми в соцмережах</h3><div class="social-links">{socialLinks.map((social) => <a class="social-link" href={social.href} target="_blank" rel="noopener noreferrer" aria-label={`${social.label} Великогрибовицького ліцею — відкрити в новій вкладці`}><Icon name={social.icon} /><span>{social.label}</span></a>)}</div></div>
       </div>
     </div>
     <div class="footer-bottom"><span>© 2026 Великогрибовицький ліцей Львівської міської ради</span><span>Створено з турботою про шкільну спільноту ♥</span></div>
