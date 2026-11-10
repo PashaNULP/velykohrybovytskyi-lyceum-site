@@ -19,7 +19,7 @@ export const navigation = [
     { href: '/batkam/#orhanizatsiia-navchannia', label: 'Організація навчання' },
     { href: '/kontakty/', label: 'Контакти' },
   ] },
-  { label: 'Життя ліцею', children: [
+  { href: '/zhyttia-litseiu/', label: 'Життя ліцею', children: [
     { href: '/novyny/', label: 'Новини' },
     { href: '/oholoshennia/', label: 'Оголошення' },
     { href: '/halerei/', label: 'Фотогалереї' },

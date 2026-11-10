@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InnerHeader from '../../components/ui/InnerHeader.astro';
+import NewsCard from '../../components/news/NewsCard.astro';
+import ContentImage from '../../components/media/ContentImage.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { formatDate, getPublishedGalleries, getPublishedNews } from '../../lib/content';
+
+const news = await getPublishedNews();
+const galleries = await getPublishedGalleries();
+const latestNews = news.slice(0, 3);
+const latestSlugs = new Set(latestNews.map(({ data }) => data.slug));
+const initiativeSlugs = new Set([
+  'uchnivske-samovriaduvannia-plany-2026',
+  'zapal-litnia-robota-2026',
+  'futbolna-komanda-u-finali-lvova',
+]);
+const initiatives = news.filter(({ data }) => initiativeSlugs.has(data.slug) && !latestSlugs.has(data.slug));
+const visibleGalleries = galleries.slice(0, 3);
+---
+
+<BaseLayout title="Життя ліцею · Великогрибовицький ліцей" description="Події, творчість, учнівські проєкти й досягнення Великогрибовицького ліцею.">
+  <InnerHeader title="Життя ліцею" description="Події, творчість, проєкти й досягнення нашої ліцейної спільноти." />
+
+  <main class="content-section life-hub-page">
+    <div class="container life-hub">
+      <nav class="life-hub-links" aria-label="Розділи життя ліцею">
+        <a href="/novyny/">Усі новини <Icon name="arrow-right" /></a>
+        <a href="/halerei/">Усі фотогалереї <Icon name="arrow-right" /></a>
+        <a href="/oholoshennia/">Оголошення <Icon name="arrow-right" /></a>
+      </nav>
+
+      {latestNews.length > 0 && (
+        <section class="life-hub-section" aria-labelledby="life-latest-title">
+          <header class="life-hub-heading">
+            <span class="eyebrow">Останні публікації</span>
+            <h2 id="life-latest-title">Актуальні матеріали</h2>
+          </header>
+          <div class="news-grid life-latest-grid">
+            {latestNews.map((item) => <NewsCard item={item} />)}
+          </div>
+        </section>
+      )}
+
+      {initiatives.length > 0 && (
+        <section class="life-hub-section" aria-labelledby="life-initiatives-title">
+          <header class="life-hub-heading">
+            <span class="eyebrow">Учнівська спільнота</span>
+            <h2 id="life-initiatives-title">Ініціативи й досягнення</h2>
+          </header>
+          <div class="life-initiative-grid">
+            {initiatives.map(({ data }) => (
+              <article class="life-initiative-card">
+                <a class="life-initiative-image" href={`/novyny/${data.slug}/`} aria-label={`Відкрити новину «${data.title}»`}>
+                  <span class="gallery-fallback"><Icon name="star" /><span>Матеріал ліцею</span></span>
+                  {data.cover && <ContentImage src={data.cover.src} alt={data.cover.alt} focusX={data.cover.focusX} focusY={data.cover.focusY} sizes="(max-width: 700px) 100vw, 33vw" />}
+                </a>
+                <div class="life-initiative-body">
+                  <span class="news-category">{data.category} · {formatDate(data.publishedAt)}</span>
+                  <h3><a href={`/novyny/${data.slug}/`}>{data.title}</a></h3>
+                  <p>{data.summary}</p>
+                  <a class="news-read" href={`/novyny/${data.slug}/`}>Читати новину <Icon name="arrow-right" /></a>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {visibleGalleries.length > 0 && (
+        <section class="life-hub-section" aria-labelledby="life-gallery-title">
+          <header class="life-hub-heading">
+            <span class="eyebrow">Фотогалереї</span>
+            <h2 id="life-gallery-title">У світлинах</h2>
+          </header>
+          <div class="gallery-card-grid life-gallery-grid">
+            {visibleGalleries.map(({ data }) => (
+              <article class="gallery-card">
+                <a class="gallery-card-image" href={`/halerei/${data.slug}/`}>
+                  <span class="gallery-fallback">Зображення недоступне</span>
+                  <ContentImage src={data.cover.src} alt={data.cover.alt} sizes="(max-width: 700px) 100vw, 50vw" />
+                </a>
+                <div class="gallery-card-body">
+                  <span class="news-category">{data.date ? `${formatDate(data.date)} · ` : ''}{data.photos.length} фото</span>
+                  <h2><a href={`/halerei/${data.slug}/`}>{data.title}</a></h2>
+                  <p>{data.description}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  </main>
+</BaseLayout>
