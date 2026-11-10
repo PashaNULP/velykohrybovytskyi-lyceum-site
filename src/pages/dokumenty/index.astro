@@ -5,107 +5,150 @@ import Icon from '../../components/ui/Icon.astro';
 import { formatDate, getPublishedDocuments } from '../../lib/content';
 
 const documents = await getPublishedDocuments();
-const categories = [...new Set(documents.map((item) => item.data.category))];
+const categoryOrder = ['Освітній процес', 'Звіти', 'Установчі документи', 'Безпека та правила'];
+const categories = [...new Set(documents.map(({ data }) => data.category))]
+  .sort((a, b) => {
+    const aIndex = categoryOrder.indexOf(a);
+    const bIndex = categoryOrder.indexOf(b);
+    if (aIndex === -1 && bIndex === -1) return a.localeCompare(b, 'uk');
+    if (aIndex === -1) return 1;
+    if (bIndex === -1) return -1;
+    return aIndex - bIndex;
+  });
+const categoryStats = categories.map((category) => ({
+  category,
+  count: documents.filter(({ data }) => data.category === category).length,
+}));
+type DocumentData = (typeof documents)[number]['data'];
+const documentYear = (data: DocumentData) => data.academicYear ?? data.documentDate?.getFullYear().toString() ?? '';
+const years = [...new Set(documents.map(({ data }) => documentYear(data)).filter(Boolean))]
+  .sort((a, b) => b.localeCompare(a, 'uk', { numeric: true }));
 ---
 
-<BaseLayout title="Документи · Великогрибовицький ліцей" description="Документи Великогрибовицького ліцею.">
-  <InnerHeader title="Документи" description="Зрозумілий каталог документів, програм і звітів закладу освіти." />
+<BaseLayout title="Документи та інформаційна відкритість · Великогрибовицький ліцей" description="Офіційні документи, освітні програми та звіти Великогрибовицького ліцею.">
+  <InnerHeader title="Документи та інформаційна відкритість" description="Єдиний каталог підтверджених документів, програм і звітів Великогрибовицького ліцею." />
   <section class="content-section documents-index">
-    <div class="container">
-      <div class="compact-page-tools document-tools">
-        <p>Офіційні документи, освітні програми та звіти закладу освіти</p>
+    <div class="container documents-center">
+      <div class="documents-workspace">
+        {categoryStats.length > 0 && (
+          <nav class="document-category-nav" aria-label="Категорії документів">
+            <h2>Категорії</h2>
+            <div class="document-category-list">
+              <button class="document-category-option" type="button" data-category-card="all" aria-pressed="false" aria-controls="doc-results">
+                <span>Усі документи</span><small>{documents.length}</small>
+              </button>
+              {categoryStats.map(({ category, count }) => (
+                <button class="document-category-option" type="button" data-category-card={category} aria-pressed="false" aria-controls="doc-results">
+                  <span>{category}</span><small>{count}</small>
+                </button>
+              ))}
+            </div>
+          </nav>
+        )}
+
         {documents.length > 0 && (
-          <div>
-            <label class="sr-only" for="doc-search">Пошук документів</label>
-            <input class="search" id="doc-search" type="search" placeholder="Пошук за назвою…" autocomplete="off" />
+          <div class="document-top-tools" role="search" aria-label="Пошук і фільтр документів">
+            <label class="document-top-search" for="doc-search">
+              <span>Пошук документів</span>
+              <input class="search" id="doc-search" type="search" placeholder="Назва, опис, категорія або рік…" autocomplete="off" aria-controls="doc-results" />
+            </label>
+            <label class="document-top-year" for="doc-year">
+              <span>Рік</span>
+              <select id="doc-year" aria-controls="doc-results">
+                <option value="all">Усі роки</option>
+                {years.map((year) => <option value={year}>{year}</option>)}
+              </select>
+            </label>
           </div>
         )}
-      </div>
 
-      {documents.length > 0 ? (
-        <>
-          <div class="tag-row" id="osvitnii-protses" aria-label="Категорії документів">
-            <button class="filter-btn active" type="button" data-doc-category="all" aria-pressed="true">Усі</button>
-            {categories.map((category) => <button class="filter-btn" type="button" data-doc-category={category} aria-pressed="false">{category}</button>)}
-          </div>
-          <p class="filter-status" id="doc-filter-status" aria-live="polite">Показано документів: {documents.length}</p>
-          <div class="doc-list" id="doc-results">
-            {documents.map(({ data }) => {
-              const documentUrl = data.pdf ?? data.externalUrl!;
-              const isLocalPdf = Boolean(data.pdf);
-              return (
-              <article class="doc-item" id={data.slug} data-doc-item data-category={data.category} data-title={data.title.toLocaleLowerCase('uk')}>
-                <span class="doc-symbol"><Icon name="file" /></span>
-                <span class="doc-meta">
-                  <strong>{data.title}</strong>
-                  <small>{data.category}{data.documentDate ? ` · ${formatDate(data.documentDate)}` : ''}{data.academicYear ? ` · ${data.academicYear} н. р.` : ''}</small>
-                  <span class="doc-summary">{data.summary}</span>
-                </span>
-                <span class="doc-actions">
-                  {isLocalPdf ? <><a class="btn btn-outline" href={documentUrl} target="_blank" rel="noopener noreferrer">Переглянути</a><a class="btn btn-dark" href={documentUrl} download>Завантажити</a></> : <a class="btn btn-dark" href={documentUrl} target="_blank" rel="noopener noreferrer">Відкрити документ</a>}
-                </span>
-              </article>
-              );
-            })}
-          </div>
-          <div class="empty" id="doc-empty" hidden>За цим запитом документів не знайдено.</div>
-        </>
-      ) : (
-        <div class="empty-state">
-          <Icon name="file" />
-          <h3>Опублікованих документів наразі немає</h3>
-          <p>Документи відображатимуться тут за категоріями та датою публікації.</p>
-        </div>
-      )}
+        <section class="documents-catalog" id="osvitnii-protses" aria-labelledby="documents-catalog-title">
+          <h2 class="sr-only" id="documents-catalog-title">Каталог документів</h2>
+
+          {documents.length > 0 ? (
+            <>
+              <p class="filter-status document-filter-status" id="doc-filter-status" role="status" aria-live="polite">Показано документів: {documents.length}</p>
+              <div class="doc-list document-center-list" id="doc-results">
+                {documents.map(({ data }) => {
+                  const documentUrl = data.pdf ?? data.externalUrl!;
+                  const isLocalPdf = Boolean(data.pdf);
+                  const year = documentYear(data);
+                  const searchText = `${data.title} ${data.summary} ${data.category} ${year}`.toLocaleLowerCase('uk');
+                  return (
+                    <article class="doc-item document-center-item" id={data.slug} data-doc-item data-category={data.category} data-year={year} data-search={searchText}>
+                      <span class="doc-symbol"><Icon name="file" /></span>
+                      <span class="doc-meta">
+                        <strong>{data.title}</strong>
+                        <small><span>{data.category}</span>{data.academicYear ? ` · ${data.academicYear} н. р.` : data.documentDate ? ` · ${formatDate(data.documentDate)}` : ''}</small>
+                        <span class="doc-summary">{data.summary}</span>
+                      </span>
+                      <span class="doc-actions">
+                        {isLocalPdf
+                          ? <><a class="btn btn-outline" href={documentUrl} target="_blank" rel="noopener noreferrer">Переглянути</a><a class="btn btn-dark" href={documentUrl} download>Завантажити</a></>
+                          : <a class="btn btn-dark" href={documentUrl} target="_blank" rel="noopener noreferrer">Відкрити документ</a>}
+                      </span>
+                    </article>
+                  );
+                })}
+              </div>
+              <div class="empty document-filter-empty" id="doc-empty" hidden><h3>Документів не знайдено</h3><p>Спробуйте змінити пошуковий запит або фільтри.</p></div>
+            </>
+          ) : (
+            <div class="empty-state"><Icon name="file" /><h3>Опублікованих документів наразі немає</h3><p>Документи відображатимуться тут після перевірки й публікації.</p></div>
+          )}
+        </section>
+      </div>
     </div>
   </section>
+
   <script>
     const search = document.querySelector<HTMLInputElement>('#doc-search');
-    const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-doc-category]')];
+    const yearSelect = document.querySelector<HTMLSelectElement>('#doc-year');
+    const cards = [...document.querySelectorAll<HTMLButtonElement>('[data-category-card]')];
     const items = [...document.querySelectorAll<HTMLElement>('[data-doc-item]')];
     const status = document.querySelector('#doc-filter-status');
     const empty = document.querySelector<HTMLElement>('#doc-empty');
+    const catalog = document.querySelector<HTMLElement>('.documents-catalog');
     const requested = new URLSearchParams(window.location.search);
-    let category = buttons.some((button) => button.dataset.docCategory === requested.get('category')) ? requested.get('category')! : 'all';
+    let category = cards.some((card) => card.dataset.categoryCard === requested.get('category')) ? requested.get('category')! : 'all';
+
     if (search) search.value = requested.get('q') ?? '';
+    if (yearSelect && [...yearSelect.options].some((option) => option.value === requested.get('year'))) yearSelect.value = requested.get('year')!;
 
     const updateUrl = () => {
       const url = new URL(window.location.href);
+      const year = yearSelect?.value ?? 'all';
+      const query = search?.value.trim() ?? '';
       category === 'all' ? url.searchParams.delete('category') : url.searchParams.set('category', category);
-      const query = (search?.value ?? '').trim();
+      year === 'all' ? url.searchParams.delete('year') : url.searchParams.set('year', year);
       query ? url.searchParams.set('q', query) : url.searchParams.delete('q');
       window.history.replaceState({}, '', url);
     };
 
     const filterDocuments = (saveToUrl = true) => {
-      const query = (search?.value ?? '').trim().toLocaleLowerCase('uk');
+      const year = yearSelect?.value ?? 'all';
+      const query = search?.value.trim().toLocaleLowerCase('uk') ?? '';
       let visible = 0;
       items.forEach((item) => {
         const matchesCategory = category === 'all' || item.dataset.category === category;
-        const matchesSearch = !query || item.dataset.title?.includes(query);
-        item.hidden = !(matchesCategory && matchesSearch);
+        const matchesYear = year === 'all' || item.dataset.year === year;
+        const matchesSearch = !query || item.dataset.search?.includes(query);
+        item.hidden = !(matchesCategory && matchesYear && matchesSearch);
         if (!item.hidden) visible++;
       });
-      if (status) status.textContent = `Показано документів: ${visible}`;
+      cards.forEach((card) => card.setAttribute('aria-pressed', String(card.dataset.categoryCard === category)));
+      if (status) status.textContent = `Показано документів: ${visible} із ${items.length}`;
       if (empty) empty.hidden = visible !== 0;
       if (saveToUrl) updateUrl();
     };
 
     search?.addEventListener('input', () => filterDocuments());
-    buttons.forEach((button) => button.addEventListener('click', () => {
-      category = button.dataset.docCategory ?? 'all';
-      buttons.forEach((item) => {
-        const active = item === button;
-        item.classList.toggle('active', active);
-        item.setAttribute('aria-pressed', String(active));
-      });
+    yearSelect?.addEventListener('change', () => filterDocuments());
+    cards.forEach((card) => card.addEventListener('click', () => {
+      category = card.dataset.categoryCard ?? 'all';
       filterDocuments();
+      if (window.matchMedia('(max-width: 900px)').matches) catalog?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }));
-    buttons.forEach((button) => {
-      const active = button.dataset.docCategory === category;
-      button.classList.toggle('active', active);
-      button.setAttribute('aria-pressed', String(active));
-    });
     filterDocuments(false);
   </script>
 </BaseLayout>

@@ -54,8 +54,16 @@ const isItemActive = (item: typeof navigation[number]) => 'href' in item
     if (!toggle || !submenu) return;
     let closeTimer: number | undefined;
 
+    const closeOtherMenus = () => {
+      for (const other of document.querySelectorAll<HTMLElement>('[data-desktop-nav-item].open')) {
+        if (other === item) continue;
+        other.classList.remove('open');
+        other.querySelector<HTMLButtonElement>('[data-desktop-submenu-toggle]')?.setAttribute('aria-expanded', 'false');
+      }
+    };
     const setOpen = (open: boolean, focusFirst = false) => {
       window.clearTimeout(closeTimer);
+      if (open) closeOtherMenus();
       item.classList.toggle('open', open);
       toggle.setAttribute('aria-expanded', String(open));
       if (focusFirst) submenu.querySelector<HTMLAnchorElement>('a')?.focus();
@@ -68,6 +76,7 @@ const isItemActive = (item: typeof navigation[number]) => 'href' in item
     };
 
     item.addEventListener('mouseenter', () => setOpen(true));
+    item.addEventListener('focusin', closeOtherMenus);
     item.addEventListener('mouseleave', scheduleClose);
     item.addEventListener('focusout', () => requestAnimationFrame(() => {
       if (!item.contains(document.activeElement)) setOpen(false);

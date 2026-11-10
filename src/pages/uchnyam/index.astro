@@ -2,39 +2,84 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import InnerHeader from '../../components/ui/InnerHeader.astro';
 import Icon from '../../components/ui/Icon.astro';
+import ContentImage from '../../components/media/ContentImage.astro';
+import { getPublishedGalleries, getPublishedNews } from '../../lib/content';
 
-const programs = [
-  { label: '1–4 класи', title: 'Освітня програма початкової школи', href: '/dokumenty/#osvitnia-prohrama-1-4-2025-2026' },
-  { label: '5–8 класи', title: 'Освітня програма НУШ', href: '/dokumenty/#osvitnia-prohrama-5-8-2025-2026' },
-  { label: '9–11 класи', title: 'Освітня програма старшої школи', href: '/dokumenty/#osvitnia-prohrama-9-11-2025-2026' },
-] as const;
+const news = await getPublishedNews();
+const galleries = await getPublishedGalleries();
+const selfGovernment = news.find(({ data }) => data.slug === 'uchnivske-samovriaduvannia-plany-2026');
+const achievement = news.find(({ data }) => data.slug === 'futbolnyi-tabir-chempioniv');
+const zapalGallery = galleries.find(({ data }) => data.slug === 'power4girls-zapal');
+const studentStories = [
+  ...(selfGovernment ? [{
+    label: 'Учнівське самоврядування',
+    title: selfGovernment.data.title,
+    description: selfGovernment.data.summary,
+    href: `/novyny/${selfGovernment.data.slug}/`,
+    image: selfGovernment.data.cover,
+  }] : []),
+  ...(zapalGallery ? [{
+    label: 'Учнівський проєкт',
+    title: zapalGallery.data.title,
+    description: zapalGallery.data.description,
+    href: `/halerei/${zapalGallery.data.slug}/`,
+    image: zapalGallery.data.cover,
+  }] : []),
+  ...(achievement ? [{
+    label: 'Досягнення учнів',
+    title: achievement.data.title,
+    description: achievement.data.summary,
+    href: `/novyny/${achievement.data.slug}/`,
+    image: achievement.data.cover,
+  }] : []),
+];
 ---
 
 <BaseLayout title="Учням · Великогрибовицький ліцей" description="Розклад, освітні програми, новини та корисна інформація для учнів Великогрибовицького ліцею.">
   <InnerHeader title="Учням" description="Розклад навчання, програми та можливості ліцейного життя." />
   <section class="content-section">
     <div class="container student-hub">
-      <article class="schedule-callout">
-        <div><span class="eyebrow">2026–2027 навчальний рік</span><h2>Розклад уроків і дзвінків</h2><p>Розклад за класами й днями тижня, а також затверджений час уроків для різних вікових груп.</p></div>
-        <div class="schedule-preview" aria-label="Розклад за днями тижня"><span>Навчальні дні</span><strong>Пн–Пт</strong></div>
-        <a class="btn btn-dark" href="/uchnyam/rozklad/">Відкрити розклад <Icon name="arrow-right" /></a>
-      </article>
-
-      <section class="hub-section" aria-labelledby="programs-title">
-        <div class="hub-heading"><div><span class="eyebrow">Навчання</span><h2 id="programs-title">Освітні програми</h2></div><a class="text-link" href="/dokumenty/?category=Освітній процес#osvitnii-protses">Усі матеріали <Icon name="arrow-right" /></a></div>
-        <div class="resource-list">
-          {programs.map((program) => <a class="resource-row" href={program.href}><span class="resource-label">{program.label}</span><strong>{program.title}</strong><Icon name="arrow-right" /></a>)}
+      <section class="student-schedule" aria-labelledby="student-schedule-title">
+        <div class="hub-heading"><div><span class="eyebrow">2026–2027 навчальний рік</span><h2 id="student-schedule-title">Розклад</h2></div></div>
+        <div class="student-schedule-grid">
+          <a href="/uchnyam/rozklad/?view=lessons">
+            <span class="card-icon"><Icon name="book" /></span>
+            <span><strong>Розклад уроків</strong><small>Оберіть клас і перегляньте навчальний тиждень або окремий день.</small></span>
+            <Icon name="arrow-right" />
+          </a>
+          <a href="/uchnyam/rozklad/?view=bells">
+            <span class="card-icon"><Icon name="calendar" /></span>
+            <span><strong>Розклад дзвінків</strong><small>Час уроків і перерв для всіх вікових груп ліцею.</small></span>
+            <Icon name="arrow-right" />
+          </a>
         </div>
       </section>
 
-      <section class="hub-section" aria-labelledby="community-title">
-        <div class="hub-heading"><div><span class="eyebrow">Ліцейна спільнота</span><h2 id="community-title">Події та ініціативи</h2></div></div>
-        <div class="hub-links">
-          <a href="/novyny/uchnivske-samovriaduvannia-plany-2026/"><span class="card-icon"><Icon name="users" /></span><span><strong>Плани учнівського самоврядування</strong><small>Підсумки, ініціативи та наступні кроки команди</small></span><Icon name="arrow-right" /></a>
-          <a href="/novyny/"><span class="card-icon"><Icon name="star" /></span><span><strong>Новини ліцею</strong><small>Навчання, творчість, спорт і досягнення</small></span><Icon name="arrow-right" /></a>
-          <a href="/oholoshennia/"><span class="card-icon"><Icon name="calendar" /></span><span><strong>Оголошення</strong><small>Організаційні повідомлення та важливі дати</small></span><Icon name="arrow-right" /></a>
-          <a href="/kontakty/"><span class="card-icon"><Icon name="phone" /></span><span><strong>Потрібна допомога?</strong><small>Офіційний телефон та адреса ліцею</small></span><Icon name="arrow-right" /></a>
-        </div>
+      {studentStories.length > 0 && (
+        <section class="hub-section student-life" aria-labelledby="student-life-title">
+          <div class="hub-heading"><div><span class="eyebrow">Ліцейна спільнота</span><h2 id="student-life-title">Життя учнів</h2></div></div>
+          <div class="student-story-grid">
+            {studentStories.map((story) => (
+              <a class="student-story" href={story.href}>
+                <span class="student-story-image">
+                  {story.image && <ContentImage src={story.image.src} alt={story.image.alt} sizes="(max-width: 700px) 100vw, 33vw" />}
+                </span>
+                <span class="student-story-body">
+                  <small>{story.label}</small>
+                  <strong>{story.title}</strong>
+                  <span>{story.description}</span>
+                  <span class="student-story-link">Переглянути матеріал <Icon name="arrow-right" /></span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section class="student-program-link" aria-labelledby="programs-title">
+        <span class="card-icon"><Icon name="file" /></span>
+        <div><span class="eyebrow">Навчання</span><h2 id="programs-title">Освітні програми</h2><p>Опубліковані програми для різних ступенів навчання зібрані в каталозі документів.</p></div>
+        <a class="text-link" href="/dokumenty/?category=Освітній процес#osvitnii-protses">Перейти до програм <Icon name="arrow-right" /></a>
       </section>
     </div>
   </section>
