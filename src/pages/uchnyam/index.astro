@@ -3,13 +3,12 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import InnerHeader from '../../components/ui/InnerHeader.astro';
 import Icon from '../../components/ui/Icon.astro';
 import ContentImage from '../../components/media/ContentImage.astro';
-import { getPublishedGalleries, getPublishedNews } from '../../lib/content';
+import { getPublishedNews } from '../../lib/content';
 
 const news = await getPublishedNews();
-const galleries = await getPublishedGalleries();
 const selfGovernment = news.find(({ data }) => data.slug === 'uchnivske-samovriaduvannia-plany-2026');
 const achievement = news.find(({ data }) => data.slug === 'futbolnyi-tabir-chempioniv');
-const zapalGallery = galleries.find(({ data }) => data.slug === 'power4girls-zapal');
+const zapalProject = news.find(({ data }) => data.slug === 'zapal-litnia-robota-2026');
 const studentStories = [
   ...(selfGovernment ? [{
     label: 'Учнівське самоврядування',
@@ -18,12 +17,12 @@ const studentStories = [
     href: `/novyny/${selfGovernment.data.slug}/`,
     image: selfGovernment.data.cover,
   }] : []),
-  ...(zapalGallery ? [{
+  ...(zapalProject ? [{
     label: 'Учнівський проєкт',
-    title: zapalGallery.data.title,
-    description: zapalGallery.data.description,
-    href: `/halerei/${zapalGallery.data.slug}/`,
-    image: zapalGallery.data.cover,
+    title: 'ЗАПАЛ — шкільне соціальне підприємство',
+    description: zapalProject.data.summary,
+    href: '/zhyttia-litseiu/zapal/',
+    image: zapalProject.data.cover,
   }] : []),
   ...(achievement ? [{
     label: 'Досягнення учнів',

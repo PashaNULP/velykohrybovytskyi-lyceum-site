@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import InnerHeader from '../../../components/ui/InnerHeader.astro';
+import ContentImage from '../../../components/media/ContentImage.astro';
+import NewsCard from '../../../components/news/NewsCard.astro';
+import Icon from '../../../components/ui/Icon.astro';
+import { getPublishedNews } from '../../../lib/content';
+
+const news = await getPublishedNews();
+const zapalNews = news.find(({ data }) => data.slug === 'zapal-litnia-robota-2026');
+---
+
+<BaseLayout title="ЗАПАЛ · Шкільне соціальне підприємство Великогрибовицького ліцею" description="ЗАПАЛ — шкільне соціальне підприємство при Великогрибовицькому ліцеї та пов’язана з ним громадська організація.">
+  <InnerHeader title="ЗАПАЛ" description="Шкільне соціальне підприємство, у якому учні здобувають практичний досвід командної роботи й підприємництва." />
+
+  <section class="content-section">
+    <div class="container zapal-page">
+      <section class="zapal-intro" aria-labelledby="zapal-intro-title">
+        <figure class="zapal-main-photo">
+          {zapalNews?.data.cover && <ContentImage src={zapalNews.data.cover.src} alt={zapalNews.data.cover.alt} sizes="(max-width: 800px) 100vw, 52vw" lightbox lightboxGroup="zapal" caption={zapalNews.data.cover.alt} />}
+        </figure>
+        <div class="zapal-intro-copy">
+          <span class="eyebrow">Ініціатива ліцею</span>
+          <h2 id="zapal-intro-title">Практичний простір для учнівських ідей</h2>
+          <p>«ЗАПАЛ» — діюче шкільне соціальне підприємство, яке працює безпосередньо при Великогрибовицькому ліцеї. Учні долучаються до створення виробів і практичної командної роботи.</p>
+          <p>На основі підприємства була створена громадська організація «ЗАПАЛ». Це два пов’язані, але окремі напрями діяльності.</p>
+        </div>
+      </section>
+
+      <section class="zapal-section zapal-history" aria-labelledby="zapal-history-title">
+        <div class="zapal-section-heading">
+          <span class="eyebrow">Історія та розвиток</span>
+          <h2 id="zapal-history-title">Від шкільної ініціативи до ширшого громадського напряму</h2>
+        </div>
+        <p>Ініціатива розвивається у Великогрибовицькому ліцеї як середовище практичного шкільного підприємництва. Досвід і команда підприємства стали основою для створення громадської організації з тією самою назвою.</p>
+        <p>Шкільне підприємство залишається частиною життя ліцею, а громадська організація розвивається як окремий пов’язаний напрям. Актуальні відомості про її діяльність публікуються на офіційній сторінці організації.</p>
+      </section>
+
+      <section class="zapal-section" aria-labelledby="zapal-directions-title">
+        <div class="zapal-section-heading">
+          <span class="eyebrow">Два напрями</span>
+          <h2 id="zapal-directions-title">Підприємство та громадська організація</h2>
+        </div>
+        <div class="zapal-direction-grid">
+          <article>
+            <span class="zapal-direction-icon"><Icon name="star" /></span>
+            <h3>Соціальне підприємство «ЗАПАЛ»</h3>
+            <p>Шкільний напрям при ліцеї: створення виробів, практична діяльність учнів, командна робота та знайомство з основами підприємництва.</p>
+            <a class="btn btn-dark" href="https://www.instagram.com/zapalcandle/" target="_blank" rel="noopener noreferrer" aria-label="Instagram соціального підприємства ЗАПАЛ, відкрити в новій вкладці"><Icon name="instagram" /> Instagram підприємства</a>
+          </article>
+          <article>
+            <span class="zapal-direction-icon"><Icon name="users" /></span>
+            <h3>Громадська організація «ЗАПАЛ»</h3>
+            <p>Окремий громадський напрям, створений на основі шкільного підприємства. Актуальну інформацію про його діяльність публікує офіційна сторінка організації.</p>
+            <a class="btn btn-outline" href="https://www.instagram.com/zapal.ngo/" target="_blank" rel="noopener noreferrer" aria-label="Instagram громадської організації ЗАПАЛ, відкрити в новій вкладці"><Icon name="instagram" /> Instagram організації</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="zapal-section" aria-labelledby="zapal-people-title">
+        <div class="zapal-section-heading">
+          <span class="eyebrow">Команда</span>
+          <h2 id="zapal-people-title">Люди, які розвивають ініціативу</h2>
+        </div>
+        <div class="zapal-people-grid">
+          <article><span class="person-initials">ІМ</span><div><h3>Іван Ярославович Михайлевич</h3><p>Учитель трудового навчання</p></div></article>
+          <article><span class="person-initials">ВМ</span><div><h3>Віктор Олександрович Майоров</h3><p>Педагог-організатор</p></div></article>
+        </div>
+      </section>
+
+      {zapalNews && (
+        <section class="zapal-section" aria-labelledby="zapal-news-title">
+          <div class="zapal-section-heading">
+            <span class="eyebrow">Проєкт у житті ліцею</span>
+            <h2 id="zapal-news-title">Опубліковані матеріали</h2>
+            <p>Новини ліцею про роботу шкільного соціального підприємства.</p>
+          </div>
+          <div class="zapal-news-grid"><NewsCard item={zapalNews} /></div>
+        </section>
+      )}
+    </div>
+  </section>
+</BaseLayout>

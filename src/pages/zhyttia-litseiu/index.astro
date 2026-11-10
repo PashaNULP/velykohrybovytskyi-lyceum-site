@@ -10,9 +10,9 @@ const news = await getPublishedNews();
 const galleries = await getPublishedGalleries();
 const latestNews = news.slice(0, 3);
 const latestSlugs = new Set(latestNews.map(({ data }) => data.slug));
+const zapalNews = news.find(({ data }) => data.slug === 'zapal-litnia-robota-2026');
 const initiativeSlugs = new Set([
   'uchnivske-samovriaduvannia-plany-2026',
-  'zapal-litnia-robota-2026',
   'futbolna-komanda-u-finali-lvova',
 ]);
 const initiatives = news.filter(({ data }) => initiativeSlugs.has(data.slug) && !latestSlugs.has(data.slug));
@@ -42,28 +42,43 @@ const visibleGalleries = galleries.slice(0, 3);
         </section>
       )}
 
-      {initiatives.length > 0 && (
+      {(zapalNews || initiatives.length > 0) && (
         <section class="life-hub-section" aria-labelledby="life-initiatives-title">
           <header class="life-hub-heading">
             <span class="eyebrow">Учнівська спільнота</span>
             <h2 id="life-initiatives-title">Ініціативи й досягнення</h2>
           </header>
-          <div class="life-initiative-grid">
-            {initiatives.map(({ data }) => (
-              <article class="life-initiative-card">
-                <a class="life-initiative-image" href={`/novyny/${data.slug}/`} aria-label={`Відкрити новину «${data.title}»`}>
-                  <span class="gallery-fallback"><Icon name="star" /><span>Матеріал ліцею</span></span>
-                  {data.cover && <ContentImage src={data.cover.src} alt={data.cover.alt} focusX={data.cover.focusX} focusY={data.cover.focusY} sizes="(max-width: 700px) 100vw, 33vw" />}
-                </a>
-                <div class="life-initiative-body">
-                  <span class="news-category">{data.category} · {formatDate(data.publishedAt)}</span>
-                  <h3><a href={`/novyny/${data.slug}/`}>{data.title}</a></h3>
-                  <p>{data.summary}</p>
-                  <a class="news-read" href={`/novyny/${data.slug}/`}>Читати новину <Icon name="arrow-right" /></a>
-                </div>
-              </article>
-            ))}
-          </div>
+          {zapalNews && (
+            <a class="zapal-hub-feature" href="/zhyttia-litseiu/zapal/">
+              <span class="zapal-hub-image">
+                {zapalNews.data.cover && <ContentImage src={zapalNews.data.cover.src} alt={zapalNews.data.cover.alt} focusX={zapalNews.data.cover.focusX} focusY={zapalNews.data.cover.focusY} sizes="(max-width: 700px) 100vw, 42vw" />}
+              </span>
+              <span class="zapal-hub-copy">
+                <small>Шкільне соціальне підприємство</small>
+                <strong>ЗАПАЛ</strong>
+                <span>{zapalNews.data.summary}</span>
+                <span class="text-link">Дізнатися більше <Icon name="arrow-right" /></span>
+              </span>
+            </a>
+          )}
+          {initiatives.length > 0 && (
+            <div class="life-initiative-grid">
+              {initiatives.map(({ data }) => (
+                <article class="life-initiative-card">
+                  <a class="life-initiative-image" href={`/novyny/${data.slug}/`} aria-label={`Відкрити новину «${data.title}»`}>
+                    <span class="gallery-fallback"><Icon name="star" /><span>Матеріал ліцею</span></span>
+                    {data.cover && <ContentImage src={data.cover.src} alt={data.cover.alt} focusX={data.cover.focusX} focusY={data.cover.focusY} sizes="(max-width: 700px) 100vw, 33vw" />}
+                  </a>
+                  <div class="life-initiative-body">
+                    <span class="news-category">{data.category} · {formatDate(data.publishedAt)}</span>
+                    <h3><a href={`/novyny/${data.slug}/`}>{data.title}</a></h3>
+                    <p>{data.summary}</p>
+                    <a class="news-read" href={`/novyny/${data.slug}/`}>Читати новину <Icon name="arrow-right" /></a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
         </section>
       )}
 
