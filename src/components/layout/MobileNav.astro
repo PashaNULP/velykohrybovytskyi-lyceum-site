@@ -4,8 +4,10 @@ import { navigation } from '../../data/site';
 
 interface Props { currentPath: string }
 const { currentPath } = Astro.props;
-const activeHref = navigation.find((item) => currentPath.startsWith(item.href))?.href;
-const isActive = (href: string) => href === '/' ? currentPath === '/' : href === activeHref;
+const isPathActive = (href: string) => currentPath.startsWith(new URL(href, 'https://site.local').pathname);
+const isItemActive = (item: typeof navigation[number]) => 'href' in item
+  ? isPathActive(item.href)
+  : item.children.some((child) => isPathActive(child.href));
 ---
 
 <div class="mobile-menu" data-mobile-menu>
@@ -20,9 +22,21 @@ const isActive = (href: string) => href === '/' ? currentPath === '/' : href ===
     <Icon name="menu" />
   </button>
   <nav id="mobile-navigation" class="mobile-nav" aria-label="Мобільна навігація" data-mobile-nav hidden>
-    <a class:list={['nav-link', { active: isActive('/') }]} aria-current={isActive('/') ? 'page' : undefined} href="/">Головна</a>
-    {navigation.map((item) => (
-      <a class:list={['nav-link', { active: isActive(item.href) }]} aria-current={isActive(item.href) ? 'page' : undefined} href={item.href}>{item.label}</a>
+    <a class:list={['nav-link', { active: currentPath === '/' }]} aria-current={currentPath === '/' ? 'page' : undefined} href="/">Головна</a>
+    {navigation.map((item, index) => (
+      <div class:list={['mobile-nav-group', { active: isItemActive(item) }]} data-mobile-nav-group>
+        {'children' in item ? <>
+          <div class="mobile-nav-parent">
+            {'href' in item
+              ? <a class:list={['nav-link', { active: isItemActive(item) }]} aria-current={isItemActive(item) ? 'page' : undefined} href={item.href}>{item.label}</a>
+              : <span class:list={['nav-link', 'mobile-nav-label', { active: isItemActive(item) }]}>{item.label}</span>}
+            <button class="mobile-submenu-toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-controls={`mobile-submenu-${index}`} aria-label={`Розгорнути підменю «${item.label}»`} data-mobile-submenu-toggle><span aria-hidden="true">⌄</span></button>
+          </div>
+          <div class="mobile-submenu" id={`mobile-submenu-${index}`} data-mobile-submenu hidden>
+            {item.children.map((child) => <a href={child.href}>{child.label}</a>)}
+          </div>
+        </> : <a class:list={['nav-link', { active: isItemActive(item) }]} aria-current={isItemActive(item) ? 'page' : undefined} href={item.href}>{item.label}</a>}
+      </div>
     ))}
     <a class:list={['nav-link', 'mobile-contact-link', { active: currentPath.startsWith('/kontakty/') }]} aria-current={currentPath.startsWith('/kontakty/') ? 'page' : undefined} href="/kontakty/">Контакти</a>
   </nav>
@@ -39,13 +53,36 @@ const isActive = (href: string) => href === '/' ? currentPath === '/' : href ===
       toggle.setAttribute('aria-label', open ? 'Закрити меню' : 'Відкрити меню');
       nav.hidden = !open;
       document.body.classList.toggle('mobile-navigation-open', open);
+      if (!open) nav.querySelectorAll<HTMLElement>('[data-mobile-nav-group]').forEach((group) => {
+        const submenu = group.querySelector<HTMLElement>('[data-mobile-submenu]');
+        if (submenu) submenu.hidden = true;
+        group.querySelector<HTMLButtonElement>('[data-mobile-submenu-toggle]')?.setAttribute('aria-expanded', 'false');
+      });
       if (returnFocus) toggle.focus();
     };
 
     toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    nav.querySelectorAll<HTMLElement>('[data-mobile-nav-group]').forEach((group) => {
+      const submenuToggle = group.querySelector<HTMLButtonElement>('[data-mobile-submenu-toggle]');
+      const submenu = group.querySelector<HTMLElement>('[data-mobile-submenu]');
+      if (!submenuToggle || !submenu) return;
+      submenuToggle.addEventListener('click', () => {
+        const open = submenuToggle.getAttribute('aria-expanded') !== 'true';
+        const label = group.querySelector<HTMLElement>('.nav-link')?.textContent?.trim() ?? '';
+        submenuToggle.setAttribute('aria-expanded', String(open));
+        submenuToggle.setAttribute('aria-label', `${open ? 'Згорнути' : 'Розгорнути'} підменю «${label}»`);
+        submenu.hidden = !open;
+      });
+    });
     nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false)));
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') setOpen(false, true);
+      if (event.key !== 'Escape' || toggle.getAttribute('aria-expanded') !== 'true') return;
+      const openSubmenu = nav.querySelector<HTMLButtonElement>('[data-mobile-submenu-toggle][aria-expanded="true"]');
+      if (openSubmenu) {
+        openSubmenu.setAttribute('aria-expanded', 'false');
+        openSubmenu.closest('[data-mobile-nav-group]')?.querySelector<HTMLElement>('[data-mobile-submenu]')?.setAttribute('hidden', '');
+        openSubmenu.focus();
+      } else setOpen(false, true);
     });
     document.addEventListener('click', (event) => {
       if (toggle.getAttribute('aria-expanded') === 'true' && event.target instanceof Node && !menu.contains(event.target)) setOpen(false);

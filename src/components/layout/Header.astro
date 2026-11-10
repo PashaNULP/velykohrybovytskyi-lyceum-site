@@ -5,8 +5,10 @@ import { navigation, site } from '../../data/site';
 
 interface Props { currentPath: string }
 const { currentPath } = Astro.props;
-const activeHref = navigation.find((item) => currentPath.startsWith(item.href))?.href;
-const isActive = (href: string) => href === activeHref;
+const isPathActive = (href: string) => currentPath.startsWith(new URL(href, 'https://site.local').pathname);
+const isItemActive = (item: typeof navigation[number]) => 'href' in item
+  ? isPathActive(item.href)
+  : item.children.some((child) => isPathActive(child.href));
 ---
 
 <div class="top-strip">
@@ -22,8 +24,20 @@ const isActive = (href: string) => href === activeHref;
       <span><span class="brand-title">Великогрибовицький<br />ліцей</span><span class="brand-sub">Львівської міської ради</span></span>
     </a>
     <nav class="desktop-nav" aria-label="Головна навігація">
-      {navigation.map((item) => (
-        <a class:list={['nav-link', { active: isActive(item.href) }]} aria-current={isActive(item.href) ? 'page' : undefined} href={item.href}>{item.label}</a>
+      {navigation.map((item, index) => (
+        <div class:list={['desktop-nav-item', { 'has-submenu': 'children' in item, active: isItemActive(item) }]} data-desktop-nav-item>
+          {'children' in item ? <>
+            <div class="desktop-nav-parent">
+              {'href' in item
+                ? <a class:list={['nav-link', { active: isItemActive(item) }]} aria-current={isItemActive(item) ? 'page' : undefined} href={item.href}>{item.label}</a>
+                : <button class:list={['nav-link', 'nav-parent-label', { active: isItemActive(item) }]} type="button" aria-expanded="false" aria-haspopup="true" aria-controls={`desktop-submenu-${index}`} data-desktop-submenu-toggle>{item.label}</button>}
+              {'href' in item && <button class="nav-submenu-toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-controls={`desktop-submenu-${index}`} aria-label={`Відкрити підменю «${item.label}»`} data-desktop-submenu-toggle><span aria-hidden="true">⌄</span></button>}
+            </div>
+            <div class="desktop-submenu" id={`desktop-submenu-${index}`} data-desktop-submenu>
+              {item.children.map((child) => <a href={child.href}>{child.label}</a>)}
+            </div>
+          </> : <a class:list={['nav-link', { active: isItemActive(item) }]} aria-current={isItemActive(item) ? 'page' : undefined} href={item.href}>{item.label}</a>}
+        </div>
       ))}
     </nav>
     <div class="header-actions">
@@ -32,3 +46,51 @@ const isActive = (href: string) => href === activeHref;
     </div>
   </div>
 </header>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-desktop-nav-item]').forEach((item) => {
+    const toggle = item.querySelector<HTMLButtonElement>('[data-desktop-submenu-toggle]');
+    const submenu = item.querySelector<HTMLElement>('[data-desktop-submenu]');
+    if (!toggle || !submenu) return;
+
+    const setOpen = (open: boolean, focusFirst = false) => {
+      item.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      if (focusFirst) submenu.querySelector<HTMLAnchorElement>('a')?.focus();
+    };
+
+    item.addEventListener('mouseenter', () => setOpen(true));
+    item.addEventListener('mouseleave', () => {
+      if (!item.contains(document.activeElement)) setOpen(false);
+    });
+    item.addEventListener('focusout', () => requestAnimationFrame(() => {
+      if (!item.contains(document.activeElement)) setOpen(false);
+    }));
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    toggle.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        setOpen(true, true);
+      }
+    });
+    submenu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false)));
+    item.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+  });
+
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Node)) return;
+    for (const item of document.querySelectorAll<HTMLElement>('[data-desktop-nav-item].open')) {
+      if (!item.contains(target)) {
+        item.classList.remove('open');
+        item.querySelector<HTMLButtonElement>('[data-desktop-submenu-toggle]')?.setAttribute('aria-expanded', 'false');
+      }
+    }
+  });
+</script>
