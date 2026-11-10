@@ -33,5 +33,6 @@ export const officialLinks = {
 
 export const socialLinks = [
   { label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=100063934453544', icon: 'facebook' },
+  { label: 'Instagram', href: 'https://www.instagram.com/lyceum_life_hrybovychi', icon: 'instagram' },
   { label: 'TikTok', href: 'https://www.tiktok.com/@v.hrybovychi.lyceum', icon: 'tiktok' },
 ] as const;

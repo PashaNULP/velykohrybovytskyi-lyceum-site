@@ -30,7 +30,7 @@ const isItemActive = (item: typeof navigation[number]) => 'href' in item
             {'href' in item
               ? <a class:list={['nav-link', { active: isItemActive(item) }]} aria-current={isItemActive(item) ? 'page' : undefined} href={item.href}>{item.label}</a>
               : <span class:list={['nav-link', 'mobile-nav-label', { active: isItemActive(item) }]}>{item.label}</span>}
-            <button class="mobile-submenu-toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-controls={`mobile-submenu-${index}`} aria-label={`Розгорнути підменю «${item.label}»`} data-mobile-submenu-toggle><span aria-hidden="true">⌄</span></button>
+            <button class="mobile-submenu-toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-controls={`mobile-submenu-${index}`} aria-label={`Розгорнути підменю «${item.label}»`} data-mobile-submenu-toggle><span class="submenu-chevron" aria-hidden="true"></span></button>
           </div>
           <div class="mobile-submenu" id={`mobile-submenu-${index}`} data-mobile-submenu hidden>
             {item.children.map((child) => <a href={child.href}>{child.label}</a>)}
