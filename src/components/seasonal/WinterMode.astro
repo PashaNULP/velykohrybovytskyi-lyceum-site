@@ -1,0 +1,215 @@
+---
+import { winterMode } from '../../data/winter-mode';
+---
+
+<div
+  class="winter-layer"
+  aria-hidden="true"
+  data-winter-layer
+  data-desktop-particles={winterMode.snowfall.desktopParticles}
+  data-mobile-particles={winterMode.snowfall.mobileParticles}
+  data-first-flight-delay={winterMode.sleigh.firstFlightDelayMs}
+  data-min-flight-interval={winterMode.sleigh.minIntervalMs}
+  data-max-flight-interval={winterMode.sleigh.maxIntervalMs}
+>
+  <canvas class="winter-snowfall" data-winter-canvas></canvas>
+  <div class="winter-sleigh" data-winter-sleigh>
+    <svg viewBox="0 0 390 120" role="presentation">
+      <g class="reindeer reindeer-one" transform="translate(190 0)" stroke="#653e2a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M64 69 45 96m43-26 14 27M96 38 89 23m8 13 7-18m-15 5-7-8m7 8 12-7m4 20 7-13m-7 8 10-5" fill="none" />
+        <ellipse cx="72" cy="62" rx="34" ry="19" fill="#a86c3f" /><circle cx="100" cy="48" r="14" fill="#bd8151" />
+        <circle cx="111" cy="48" r="4" fill="#e84f55" stroke="none" /><circle cx="101" cy="43" r="2" fill="#162f39" stroke="none" />
+      </g>
+      <g class="reindeer reindeer-two" transform="translate(190 0)" stroke="#653e2a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M145 69 127 96m42-26 14 27M177 38l-7-15m8 13 7-18m-15 5-7-8m7 8 12-7m4 20 7-13m-7 8 10-5" fill="none" />
+        <ellipse cx="153" cy="62" rx="34" ry="19" fill="#a86c3f" /><circle cx="181" cy="48" r="14" fill="#bd8151" />
+        <circle cx="192" cy="48" r="4" fill="#e84f55" stroke="none" /><circle cx="182" cy="43" r="2" fill="#162f39" stroke="none" />
+      </g>
+      <path d="M145 57q35-16 82 5" fill="none" stroke="#d5b074" stroke-width="3" stroke-dasharray="5 5" />
+      <g class="santa-sleigh" transform="translate(-205 0)">
+        <path d="M248 56h104l-14 38h-73q-20 0-24-17Z" fill="#d94c52" stroke="#812e38" stroke-width="5" stroke-linejoin="round" />
+        <path d="M247 94q31 20 105 2" fill="none" stroke="#f3bf59" stroke-width="6" stroke-linecap="round" />
+        <path d="M267 55q-7-31 16-38 25-8 38 20v18" fill="#df4c52" stroke="#84323b" stroke-width="5" />
+        <circle cx="294" cy="30" r="18" fill="#f2c39d" /><path d="M276 27q7-28 34-18l13 12-10 5q-16-8-37 1Z" fill="#df4c52" />
+        <circle cx="320" cy="18" r="7" fill="#fff" /><path d="M279 37q15 17 32 0 4 22-17 25-19-2-15-25Z" fill="#fff" />
+        <circle cx="288" cy="27" r="2.2" fill="#173346" /><circle cx="300" cy="27" r="2.2" fill="#173346" />
+        <circle cx="295" cy="32" r="2.1" fill="#dc8b72" /><path d="M303 36q-9 7-17 0" fill="none" stroke="#8a4c3d" stroke-width="2" stroke-linecap="round" />
+        <path d="M260 55q-7-21-22-12-9 7 4 24Z" fill="#2f806f" stroke="#195448" stroke-width="4" />
+        <circle cx="235" cy="42" r="4" fill="#ffd060" stroke="none" />
+      </g>
+    </svg>
+  </div>
+</div>
+
+<script>
+  const html = document.documentElement;
+  const layer = document.querySelector<HTMLElement>('[data-winter-layer]');
+  const canvas = layer?.querySelector<HTMLCanvasElement>('[data-winter-canvas]');
+  const sleigh = layer?.querySelector<HTMLElement>('[data-winter-sleigh]');
+  // The garland strip is reserved decoration space, above the navigation.
+  if (sleigh) document.querySelector('.winter-garland')?.append(sleigh);
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let animationFrame = 0;
+  let flightTimer = 0;
+  let particles: Array<{ x: number; y: number; radius: number; speed: number; drift: number; phase: number; spin: number; opacity: number }> = [];
+
+  const isActive = () => html.dataset.winterMode === 'on';
+  const updateToggle = () => {
+    const active = isActive();
+    document.querySelectorAll<HTMLButtonElement>('[data-winter-toggle]').forEach((button) => {
+      const label = active ? 'Вимкнути зимовий режим' : 'Увімкнути зимовий режим';
+      button.setAttribute('aria-pressed', String(active));
+      button.setAttribute('aria-label', label);
+      button.title = label;
+      const text = button.querySelector<HTMLElement>('[data-winter-toggle-text]');
+      if (text) text.textContent = label;
+    });
+  };
+
+  const markSnowCaps = (active: boolean) => {
+    document.querySelectorAll<HTMLElement>('.news-card, .notice-card, .info-card, .parent-info-panel, .zapal-hub-feature, .document-top-tools').forEach((element, index) => {
+      element.classList.toggle('winter-cap', active && index < 8);
+    });
+    document.querySelectorAll<HTMLElement>('.hero-art, .card-visual, .gallery-shot, .gallery-card-image, .about-building-photo, .zapal-main-photo, .student-story-image, .life-initiative-image, .article-hero, .content-photo').forEach((element) => {
+      element.classList.toggle('winter-photo-cap', active);
+    });
+  };
+
+  const resizeCanvas = () => {
+    if (!canvas) return;
+    const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
+    canvas.width = Math.round(window.innerWidth * ratio);
+    canvas.height = Math.round(window.innerHeight * ratio);
+    canvas.style.width = `${window.innerWidth}px`;
+    canvas.style.height = `${window.innerHeight}px`;
+    canvas.getContext('2d')?.setTransform(ratio, 0, 0, ratio, 0, 0);
+  };
+
+  const createParticles = () => {
+    if (!layer) return;
+    const baseCount = window.innerWidth <= 700 ? Number(layer.dataset.mobileParticles) : Number(layer.dataset.desktopParticles);
+    const areaScale = Math.min(1.55, Math.max(.85, (window.innerWidth * window.innerHeight) / (1440 * 900)));
+    const count = Math.round(baseCount * areaScale);
+    particles = Array.from({ length: count }, () => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      radius: 1.2 + Math.random() * 4.8,
+      speed: .4 + Math.random() * 1.35,
+      drift: .12 + Math.random() * .58,
+      phase: Math.random() * Math.PI * 2,
+      spin: Math.random() * Math.PI,
+      opacity: .38 + Math.random() * .58,
+    }));
+  };
+
+  const drawFlake = (context: CanvasRenderingContext2D, particle: typeof particles[number]) => {
+    context.save();
+    context.translate(particle.x, particle.y);
+    context.rotate(particle.spin);
+    context.globalAlpha = particle.opacity;
+    context.strokeStyle = '#f4fcff';
+    context.fillStyle = '#f4fcff';
+    context.lineWidth = particle.radius > 4.5 ? 1.15 : .9;
+    if (particle.radius < 3.5) {
+      context.beginPath();
+      context.arc(0, 0, particle.radius, 0, Math.PI * 2);
+      context.fill();
+    } else {
+      for (let arm = 0; arm < 6; arm += 1) {
+        context.beginPath();
+        context.moveTo(0, 0);
+        context.lineTo(particle.radius, 0);
+        if (particle.radius > 4.4) {
+          context.moveTo(particle.radius * .58, 0);
+          context.lineTo(particle.radius * .82, particle.radius * .2);
+          context.moveTo(particle.radius * .58, 0);
+          context.lineTo(particle.radius * .82, -particle.radius * .2);
+        }
+        context.stroke();
+        context.rotate(Math.PI / 3);
+      }
+    }
+    context.restore();
+  };
+
+  const animateSnow = () => {
+    if (!canvas || !isActive() || reduceMotion.matches || document.hidden) return;
+    const context = canvas.getContext('2d');
+    if (!context) return;
+    context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    for (const particle of particles) {
+      particle.phase += .009;
+      particle.spin += .003;
+      particle.y += particle.speed;
+      particle.x += Math.sin(particle.phase) * particle.drift;
+      if (particle.y > window.innerHeight + 8) {
+        particle.y = -8;
+        particle.x = Math.random() * window.innerWidth;
+      }
+      drawFlake(context, particle);
+    }
+    animationFrame = window.requestAnimationFrame(animateSnow);
+  };
+
+  const scheduleFlight = (first = false) => {
+    window.clearTimeout(flightTimer);
+    if (!layer || !sleigh || !isActive() || reduceMotion.matches || document.hidden) return;
+    const min = Number(layer.dataset.minFlightInterval);
+    const max = Number(layer.dataset.maxFlightInterval);
+    const delay = first ? Number(layer.dataset.firstFlightDelay) : min + Math.random() * (max - min);
+    flightTimer = window.setTimeout(() => {
+      sleigh.classList.remove('is-flying');
+      void sleigh.offsetWidth;
+      sleigh.classList.add('is-flying');
+    }, delay);
+  };
+  sleigh?.addEventListener('animationend', (event) => {
+    if (event.target !== sleigh || event.animationName !== 'winter-sleigh-flight') return;
+    sleigh.classList.remove('is-flying');
+    scheduleFlight();
+  });
+
+  const applyWinterMode = () => {
+    window.cancelAnimationFrame(animationFrame);
+    window.clearTimeout(flightTimer);
+    const active = isActive();
+    layer?.classList.toggle('active', active);
+    sleigh?.classList.remove('is-flying');
+    markSnowCaps(active);
+    updateToggle();
+    if (!active || reduceMotion.matches) {
+      canvas?.getContext('2d')?.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      sleigh?.classList.remove('is-flying');
+      return;
+    }
+    resizeCanvas();
+    createParticles();
+    animateSnow();
+    scheduleFlight(true);
+  };
+
+  document.querySelectorAll<HTMLButtonElement>('[data-winter-toggle]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const active = !isActive();
+      html.dataset.winterMode = active ? 'on' : 'off';
+      try { localStorage.setItem('winter-mode', active ? 'on' : 'off'); } catch {}
+      applyWinterMode();
+    });
+  });
+  window.addEventListener('resize', () => {
+    if (!isActive() || reduceMotion.matches) return;
+    resizeCanvas();
+    createParticles();
+  }, { passive: true });
+  document.addEventListener('visibilitychange', () => {
+    window.cancelAnimationFrame(animationFrame);
+    window.clearTimeout(flightTimer);
+    sleigh?.classList.remove('is-flying');
+    if (!document.hidden && isActive() && !reduceMotion.matches) {
+      animateSnow();
+      scheduleFlight(true);
+    }
+  });
+  reduceMotion.addEventListener('change', applyWinterMode);
+  applyWinterMode();
+</script>

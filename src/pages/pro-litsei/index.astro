@@ -7,9 +7,6 @@ import ContentImage from '../../components/media/ContentImage.astro';
 const documents = [
   { label: 'Статут ліцею', detail: 'Затверджений 9 квітня 2021 року', href: '/dokumenty/#statut-velykohrybovytskoho-litseiu' },
   { label: 'Виписка з ЄДР', detail: 'Реєстраційний документ закладу', href: '/dokumenty/#vypyska-z-yedr-velykohrybovytskyi-litsei' },
-  { label: 'Освітні програми', detail: 'Програми для 1–4, 5–8 та 9–11 класів', href: '/dokumenty/?category=Освітній процес#osvitnii-protses' },
-  { label: 'Режим роботи', detail: 'Структура навчального року й організація занять', href: '/dokumenty/#rezhym-roboty-litseiu-2026-2027' },
-  { label: 'Звіт директорки', detail: 'Підсумки 2025–2026 навчального року', href: '/dokumenty/#zvit-dyrektora-2025-2026' },
 ] as const;
 ---
 
@@ -22,14 +19,16 @@ const documents = [
         <div class="about-intro-copy"><span class="eyebrow">Заклад освіти громади</span><h2 id="about-intro-title">Великогрибовицький ліцей</h2><p>Заклад загальної середньої освіти Львівської міської ради працює у селі Великі Грибовичі та забезпечує навчання учнів початкової, базової і старшої школи.</p><dl class="about-facts"><div><dt>Адреса</dt><dd>с. Великі Грибовичі, вул. Стуса, 1А</dd></div><div><dt>Засновник</dt><dd>Львівська міська рада</dd></div><div><dt>Навчання</dt><dd>Освітні програми для 1–11 класів</dd></div></dl><a class="text-link" href="/kontakty/">Контакти та розташування <Icon name="arrow-right" /></a></div>
       </section>
 
-      <section class="about-section about-development" aria-labelledby="development-title">
-        <div class="about-section-heading"><span class="eyebrow">Підтверджені етапи</span><h2 id="development-title">Розвиток закладу</h2><p>Нижче — факти, зафіксовані в офіційних документах і публічних звітах ліцею. Повна історична довідка про заснування закладу потребує окремого підтвердження архівними матеріалами.</p></div>
-        <ol class="about-timeline"><li><time>2021</time><div><h3>Оновлено установчі документи</h3><p>9 квітня 2021 року затверджено чинний Статут Великогрибовицького ліцею; у грудні сформовано виписку з Єдиного державного реєстру.</p></div></li><li><time>2025–2026</time><div><h3>Освітні програми й оновлення простору</h3><p>Опубліковано освітні програми для 1–4, 5–8 та 9–11 класів. У звіті директорки також зафіксовано ремонти, оновлення приміщень і роботу над безбар’єрністю.</p></div></li><li><time>2026–2027</time><div><h3>Організація навчального року</h3><p>Опубліковано режим роботи ліцею та повний розклад навчання на 2026–2027 навчальний рік.</p></div></li></ol>
-      </section>
-
       <section class="about-section" aria-labelledby="leadership-title">
         <div class="about-section-heading"><span class="eyebrow">Команда</span><h2 id="leadership-title">Керівництво і педагогічний колектив</h2></div>
-        <div class="leadership-layout"><div class="leadership-list"><article><span class="person-initials" aria-hidden="true">ЛС</span><div><h3>Любов Садовська</h3><p>Директорка Великогрибовицького ліцею</p></div></article><article><span class="person-initials" aria-hidden="true">ГП</span><div><h3>Галина Процевич</h3><p>Заступниця директорки</p></div></article></div><div class="team-copy"><h3>Педагогічна команда</h3><p>Учителі ліцею забезпечують навчання від початкової до старшої школи, беруть участь у професійних зустрічах, проєктній роботі, профорієнтації, творчих і громадянських ініціативах.</p><p>Повний актуальний кадровий склад варто звіряти з офіційним переліком закладу.</p><a class="text-link" href="https://www.hrybovychi-school.com.ua/інформаційна-відкритість/кадровий-склад" target="_blank" rel="noreferrer">Кадровий склад на офіційному сайті <Icon name="external" /></a></div></div>
+        <div class="leadership-layout">
+          <div class="leadership-list">
+            <article><span class="person-initials" aria-hidden="true">ЛС</span><div><h3>Садовська Любов Василівна</h3><p>Директор</p></div></article>
+            <article><span class="person-initials" aria-hidden="true">НУ</span><div><h3>Улицька Надія Романівна</h3><p>Заступник директора з НВР з питань організації навчально-виховного процесу</p></div></article>
+            <article><span class="person-initials" aria-hidden="true">ГП</span><div><h3>Процевич Галина Василівна</h3><p>Заступник директора з ВР</p></div></article>
+          </div>
+          <div class="team-copy"><h3>Педагогічна команда</h3><p>Учителі ліцею забезпечують навчання від початкової до старшої школи, беруть участь у професійних зустрічах, проєктній роботі, профорієнтації, творчих і громадянських ініціативах.</p><p>Повний актуальний кадровий склад варто звіряти з офіційним переліком закладу.</p><a class="text-link" href="https://www.hrybovychi-school.com.ua/інформаційна-відкритість/кадровий-склад" target="_blank" rel="noreferrer">Кадровий склад на офіційному сайті <Icon name="external" /></a></div>
+        </div>
       </section>
 
       <section class="about-section" aria-labelledby="learning-title">
@@ -39,8 +38,18 @@ const documents = [
 
       <section class="about-projects" aria-labelledby="projects-title">
         <div class="about-section-heading"><span class="eyebrow">Проєкти і традиції</span><h2 id="projects-title">Те, чим живе ліцей</h2></div>
-        <div class="about-project-feature"><div class="about-project-image"><ContentImage src="/media/images/news/2026-07-14-zapal.jpg" alt="Команда шкільного соціального підприємства ЗАПАЛ" sizes="(max-width: 800px) 100vw, 50vw" lightbox lightboxGroup="about-lyceum" caption="Команда шкільного соціального підприємства «ЗАПАЛ»" /></div><div><h3>Шкільне соціальне підприємство «ЗАПАЛ»</h3><p>Учнівська команда створює вироби, представляє їх на подіях і спрямовує підприємницьку активність на суспільно корисні та благодійні ініціативи.</p><a class="text-link" href="/novyny/zapal-litnia-robota-2026/">Дізнатися про «ЗАПАЛ» <Icon name="arrow-right" /></a></div></div>
-        <div class="about-project-links"><a href="/novyny/doslidni-dilianky-litseiu/"><strong>Дослідні ділянки</strong><span>Практичні спостереження й догляд за рослинами на території ліцею</span><Icon name="arrow-right" /></a><a href="/halerei/muzharbuz-2026/"><strong>«МузГарбуз»</strong><span>Творча подія, що об’єднує учнів, педагогів і громаду</span><Icon name="arrow-right" /></a><a href="/novyny/futbolna-komanda-u-finali-lvova/"><strong>Спортивні досягнення</strong><span>Командні змагання та представлення ліцею на міському рівні</span><Icon name="arrow-right" /></a></div>
+        <div class="about-initiative-links">
+          <a href="/zhyttia-litseiu/zapal/">
+            <span class="about-initiative-image"><ContentImage src="/media/images/news/2026-07-14-zapal.jpg" alt="Команда шкільного соціального підприємства ЗАПАЛ" sizes="(max-width: 700px) 96px, 120px" /></span>
+            <span><strong>Шкільне соціальне підприємство «ЗАПАЛ»</strong><small>Ініціатива ліцею, що поєднує практичну діяльність учнів і соціальне підприємництво.</small></span>
+            <Icon name="arrow-right" />
+          </a>
+          <a href="/zhyttia-litseiu/">
+            <span class="about-initiative-symbol"><Icon name="star" /></span>
+            <span><strong>Життя ліцею</strong><small>Події, учнівські ініціативи, досягнення та фотогалереї ліцейної спільноти.</small></span>
+            <Icon name="arrow-right" />
+          </a>
+        </div>
       </section>
 
       <section class="about-documents" aria-labelledby="documents-title"><div class="about-section-heading"><span class="eyebrow">Інформаційна відкритість</span><h2 id="documents-title">Основні документи</h2></div><div class="about-document-list">{documents.map((document) => <a href={document.href}><span><strong>{document.label}</strong><small>{document.detail}</small></span><Icon name="arrow-right" /></a>)}</div><a class="btn btn-outline" href="/dokumenty/">Увесь каталог документів</a></section>

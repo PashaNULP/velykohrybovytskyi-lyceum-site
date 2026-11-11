@@ -1,0 +1,27 @@
+---
+const colors = ['#ffd15e', '#62d7cb', '#ff7078', '#72b9ff'];
+const bulbs = [24, 72, 120, 168, 216].map((x, index) => {
+  const t = x / 240;
+  return { x, y: 4 + 28 * t * (1 - t), color: colors[index % colors.length] };
+});
+---
+
+<div class="winter-garland" aria-hidden="true">
+  <div class="winter-garland-wire">
+    {Array.from({ length: 20 }, (_, tile) => (
+      <svg class="winter-garland-segment" width="240" height="44" viewBox="0 0 240 44" role="presentation">
+        <path class="winter-garland-cable" d="M0 4Q120 18 240 4" />
+        {bulbs.map((bulb, index) => (
+          <g transform={`translate(${bulb.x} ${bulb.y})`}>
+            <path class="winter-bulb-wire" d="M0 0v8" />
+            <g class="winter-bulb-glow" style={`--bulb-color:${bulb.color};--bulb-delay:${-((tile + index) % 7) * .31}s`}>
+              <path d="M-6 10h12v9a6 6 0 0 1-12 0Z" fill={bulb.color} stroke="#173845" stroke-width="1.2" />
+              <ellipse cx="-2" cy="15" rx="1.6" ry="2.4" fill="#fff" />
+            </g>
+            <rect x="-5" y="7" width="10" height="5" rx="1.5" fill="#34535b" stroke="#173845" />
+          </g>
+        ))}
+      </svg>
+    ))}
+  </div>
+</div>

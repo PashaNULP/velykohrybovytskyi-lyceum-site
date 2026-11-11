@@ -2,95 +2,34 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import InnerHeader from '../../components/ui/InnerHeader.astro';
 import Icon from '../../components/ui/Icon.astro';
-import { officialLinks, site } from '../../data/site';
-import { getPublishedNews } from '../../lib/content';
-
-const news = await getPublishedNews();
-const usefulSlugs = new Set([
-  'koordynatsiina-narada-ta-navchalna-evakuatsiia',
-  'den-bezpechnoho-internetu-2026',
-]);
-const usefulMaterials = news.filter(({ data }) => usefulSlugs.has(data.slug));
+import { officialLinks } from '../../data/site';
 ---
 
-<BaseLayout title="Батькам · Великогрибовицький ліцей" description="Інформація про зарахування, організацію навчання, безпеку та зв’язок із Великогрибовицьким ліцеєм.">
+<BaseLayout title="Батькам · Великогрибовицький ліцей" description="Інформація про зарахування, організацію навчання та зв’язок із Великогрибовицьким ліцеєм.">
   <InnerHeader title="Батькам" description="Основна інформація щодо навчання, організації освітнього процесу та зв’язку з ліцеєм." />
 
-  <section class="content-section">
-    <div class="container parent-guide">
-      <nav class="parent-guide-nav" aria-label="Навігація сторінкою для батьків">
-        <a href="#zarahuvannia"><span>Зарахування до ліцею</span><Icon name="arrow-right" /></a>
-        <a href="#orhanizatsiia-navchannia"><span>Організація навчання</span><Icon name="arrow-right" /></a>
-        <a href="#korysna-informatsiia"><span>Корисна інформація та контакти</span><Icon name="arrow-right" /></a>
-      </nav>
-
-      <section class="parent-guide-section parent-admission" id="zarahuvannia" aria-labelledby="admission-title">
-        <div class="parent-guide-heading">
+  <section class="content-section parent-compact-section">
+    <div class="container parent-compact">
+      <div class="parent-info-grid">
+        <section class="parent-info-panel parent-admission-panel" id="zarahuvannia" aria-labelledby="admission-title">
           <span class="eyebrow">Вступ до ліцею</span>
-          <h2 id="admission-title">Зарахування до ліцею</h2>
+          <h2 id="admission-title">Зарахування</h2>
           <p>Перевірені правила прийому оприлюднені на офіційній сторінці закладу. Терміни, перелік документів і процедури варто уточнювати безпосередньо в цьому джерелі.</p>
-        </div>
-        <div class="parent-admission-action">
-          <span class="card-icon"><Icon name="file" /></span>
-          <div><strong>Офіційні правила прийому</strong><p>Відкриються на попередньому офіційному сайті ліцею.</p></div>
-          <a class="btn btn-dark" href={officialLinks.admissionRules} target="_blank" rel="noopener noreferrer">Відкрити правила <Icon name="external" /></a>
-        </div>
-      </section>
+          <a class="btn btn-dark" href={officialLinks.admissionRules} target="_blank" rel="noopener noreferrer">Відкрити правила прийому <Icon name="external" /></a>
+        </section>
 
-      <section class="parent-guide-section" id="orhanizatsiia-navchannia" aria-labelledby="learning-title">
-        <div class="parent-guide-heading">
+        <section class="parent-info-panel" id="orhanizatsiia-navchannia" aria-labelledby="learning-title">
           <span class="eyebrow">Освітній процес</span>
           <h2 id="learning-title">Організація навчання</h2>
-          <p>Швидкі переходи до актуального розкладу та опублікованих організаційних документів.</p>
-        </div>
+          <nav class="parent-learning-links" aria-label="Матеріали про організацію навчання">
+            <a href="/uchnyam/rozklad/?view=lessons"><span><strong>Розклад уроків</strong><small>За класами та днями тижня</small></span><Icon name="arrow-right" /></a>
+            <a href="/uchnyam/rozklad/?view=bells"><span><strong>Розклад дзвінків</strong><small>Час уроків і перерв</small></span><Icon name="arrow-right" /></a>
+            <a href="/dokumenty/#rezhym-roboty-litseiu-2026-2027"><span><strong>Режим роботи ліцею</strong><small>2026–2027 навчальний рік</small></span><Icon name="arrow-right" /></a>
+            <a href="/dokumenty/?category=Освітній процес#osvitnii-protses"><span><strong>Освітні програми</strong><small>Опубліковані програми за ступенями навчання</small></span><Icon name="arrow-right" /></a>
+          </nav>
+        </section>
+      </div>
 
-        <div class="parent-schedule-grid">
-          <a href="/uchnyam/rozklad/?view=lessons">
-            <span class="card-icon"><Icon name="book" /></span>
-            <span><strong>Розклад уроків</strong><small>Вибір класу, дня або огляд усього тижня</small></span>
-            <Icon name="arrow-right" />
-          </a>
-          <a href="/uchnyam/rozklad/?view=bells">
-            <span class="card-icon"><Icon name="calendar" /></span>
-            <span><strong>Розклад дзвінків</strong><small>Час уроків і перерв для різних вікових груп</small></span>
-            <Icon name="arrow-right" />
-          </a>
-        </div>
-
-        <div class="parent-resource-links" aria-label="Документи про організацію навчання">
-          <a href="/dokumenty/#rezhym-roboty-litseiu-2026-2027"><span><strong>Режим роботи ліцею</strong><small>2026–2027 навчальний рік</small></span><Icon name="arrow-right" /></a>
-          <a href="/dokumenty/?category=Освітній процес#osvitnii-protses"><span><strong>Освітні програми</strong><small>Опубліковані програми за ступенями навчання</small></span><Icon name="arrow-right" /></a>
-        </div>
-      </section>
-
-      <section class="parent-guide-section" id="korysna-informatsiia" aria-labelledby="useful-title">
-        <div class="parent-guide-heading">
-          <span class="eyebrow">Безпека</span>
-          <h2 id="useful-title">Корисна інформація для батьків</h2>
-          <p>Опубліковані матеріали ліцею про безпечне освітнє середовище та відповідальну поведінку дітей.</p>
-        </div>
-        {usefulMaterials.length > 0 && (
-          <div class="parent-useful-list">
-            {usefulMaterials.map(({ data }) => (
-              <a href={`/novyny/${data.slug}/`}>
-                <span class="card-icon"><Icon name="check" /></span>
-                <span><strong>{data.title}</strong><small>{data.summary}</small></span>
-                <Icon name="arrow-right" />
-              </a>
-            ))}
-          </div>
-        )}
-      </section>
-
-      <section class="parent-contact" id="zviazok" aria-labelledby="parent-contact-title">
-        <span class="card-icon"><Icon name="phone" /></span>
-        <div>
-          <span class="eyebrow">Зв’язок із ліцеєм</span>
-          <h2 id="parent-contact-title">Потрібне уточнення?</h2>
-          <p><a href={site.phoneHref}>{site.phone}</a><span aria-hidden="true"> · </span>{site.address}</p>
-        </div>
-        <a class="btn btn-dark" href="/kontakty/">Усі контакти <Icon name="arrow-right" /></a>
-      </section>
     </div>
   </section>
 </BaseLayout>

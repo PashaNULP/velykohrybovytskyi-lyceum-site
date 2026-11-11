@@ -1,9 +1,13 @@
 ---
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
+import SocialDock from '../components/layout/SocialDock.astro';
 import Lightbox from '../components/media/Lightbox.astro';
+import WinterMode from '../components/seasonal/WinterMode.astro';
 import '../styles/global.css';
+import '../styles/winter-mode.css';
 import { site } from '../data/site';
+import { winterMode } from '../data/winter-mode';
 
 interface Props {
   title: string;
@@ -17,11 +21,54 @@ const robots = isPublicProduction ? 'index,follow' : 'noindex,nofollow,noarchive
 ---
 
 <!doctype html>
-<html lang="uk">
+<html
+  lang="uk"
+  data-theme="light"
+  data-winter-enabled={String(winterMode.enabled)}
+  data-winter-timezone={winterMode.timezone}
+  data-winter-start={`${winterMode.automaticPeriod.start.month}-${winterMode.automaticPeriod.start.day}`}
+  data-winter-end={`${winterMode.automaticPeriod.end.month}-${winterMode.automaticPeriod.end.day}`}
+>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#163447" />
+    <script is:inline>
+      (() => {
+        let theme = 'light';
+        try { if (localStorage.getItem('site-theme') === 'dark') theme = 'dark'; } catch {}
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#0d1c25' : '#163447');
+      })();
+    </script>
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        if (root.dataset.winterEnabled !== 'true') {
+          root.dataset.winterMode = 'off';
+          return;
+        }
+        const parseDate = (value) => {
+          const [month, day] = String(value || '').split('-').map(Number);
+          return month * 100 + day;
+        };
+        const parts = new Intl.DateTimeFormat('en', {
+          timeZone: root.dataset.winterTimezone || 'Europe/Kyiv',
+          month: 'numeric',
+          day: 'numeric',
+        }).formatToParts(new Date());
+        const month = Number(parts.find((part) => part.type === 'month')?.value);
+        const day = Number(parts.find((part) => part.type === 'day')?.value);
+        const today = month * 100 + day;
+        const start = parseDate(root.dataset.winterStart);
+        const end = parseDate(root.dataset.winterEnd);
+        const inSeason = start <= end ? today >= start && today <= end : today >= start || today <= end;
+        let preference = null;
+        try { preference = localStorage.getItem('winter-mode'); } catch {}
+        root.dataset.winterMode = preference === 'on' || (preference !== 'off' && inSeason) ? 'on' : 'off';
+      })();
+    </script>
     <meta name="description" content={description} />
     <meta name="robots" content={robots} />
     <link rel="icon" type="image/png" href="/favicon.png" />
@@ -38,8 +85,10 @@ const robots = isPublicProduction ? 'index,follow' : 'noindex,nofollow,noarchive
   <body>
     <a class="skip-link" href="#main-content">Перейти до основного вмісту</a>
     <Header currentPath={Astro.url.pathname} />
+    <WinterMode />
     <main id="main-content"><slot /></main>
     <Footer />
+    <SocialDock />
     <Lightbox />
     <script>
       document.querySelectorAll<HTMLImageElement>('[data-fallback-image]').forEach((image) => {

@@ -1,0 +1,32 @@
+---
+import Icon from '../ui/Icon.astro';
+---
+
+<button class="theme-toggle" type="button" aria-pressed="false" aria-label="Увімкнути темну тему" title="Увімкнути темну тему" data-theme-toggle>
+  <span class="theme-icon theme-icon-moon" aria-hidden="true"><Icon name="moon" /></span>
+  <span class="theme-icon theme-icon-sun" aria-hidden="true"><Icon name="sun" /></span>
+</button>
+
+<script>
+  const setThemeControls = (theme: 'light' | 'dark') => {
+    const dark = theme === 'dark';
+    document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((button) => {
+      const label = dark ? 'Увімкнути світлу тему' : 'Увімкнути темну тему';
+      button.setAttribute('aria-pressed', String(dark));
+      button.setAttribute('aria-label', label);
+      button.title = label;
+    });
+  };
+
+  setThemeControls(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
+  document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.style.colorScheme = theme;
+      document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#0d1c25' : '#163447');
+      try { localStorage.setItem('site-theme', theme); } catch {}
+      setThemeControls(theme);
+    });
+  });
+</script>

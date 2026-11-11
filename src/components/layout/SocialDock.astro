@@ -1,0 +1,20 @@
+---
+import Icon from '../ui/Icon.astro';
+import { socialLinks } from '../../data/site';
+---
+
+<aside class="social-dock" aria-label="Соціальні мережі ліцею">
+  {socialLinks.map((social) => (
+    <a
+      class="social-dock-link"
+      data-label={social.label}
+      data-network={social.icon}
+      href={social.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${social.label} Великогрибовицького ліцею — відкрити в новій вкладці`}
+    >
+      <Icon name={social.icon} />
+    </a>
+  ))}
+</aside>

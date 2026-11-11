@@ -6,16 +6,16 @@ import { site, socialLinks } from '../../data/site';
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
-      <div>
+      <div class="footer-about">
         <a class="brand" href="/">
           <img class="logo" src="/images/lyceum-crest.webp" alt="" width="58" height="58" />
           <span><span class="brand-title">Великогрибовицький<br />ліцей</span><span class="brand-sub">Львівської міської ради</span></span>
         </a>
         <p class="footer-blurb">Місце, де зростають ідеї, формується характер і починається шлях до великих відкриттів.</p>
       </div>
-      <div>
+      <nav class="footer-navigation" aria-label="Навігація у підвалі сайту">
         <h2>Навігація</h2>
-        <ul>
+        <ul class="footer-nav-list">
           <li><a href="/pro-litsei/">Про ліцей</a></li>
           <li><a href="/novyny/">Новини та події</a></li>
           <li><a href="/uchnyam/">Учням</a></li>
@@ -25,12 +25,23 @@ import { site, socialLinks } from '../../data/site';
           <li><a href="/oholoshennia/">Оголошення</a></li>
           <li><a href="/halerei/">Фотогалереї</a></li>
         </ul>
-      </div>
-      <div>
+      </nav>
+      <div class="footer-connect">
         <h2>Зв'яжіться з нами</h2>
         <div class="footer-contact"><Icon name="map-pin" /> <span>с. Великі Грибовичі,<br />вул. Стуса, 1а</span></div>
         <div class="footer-contact"><Icon name="phone" /><a href={site.phoneHref}>{site.phone}</a></div>
-        <div class="footer-social"><h3>Ми в соцмережах</h3><div class="social-links">{socialLinks.map((social) => <a class="social-link" href={social.href} target="_blank" rel="noopener noreferrer" aria-label={`${social.label} Великогрибовицького ліцею — відкрити в новій вкладці`}><Icon name={social.icon} /><span>{social.label}</span></a>)}</div></div>
+        <div class="footer-social">
+          <h3>Ми в соцмережах</h3>
+          <div class="social-links">
+            {socialLinks.map((social) => (
+              <a class="social-link" data-network={social.icon} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={`${social.label} Великогрибовицького ліцею — відкрити в новій вкладці`}>
+                <span class="social-link-icon"><Icon name={social.icon} /></span>
+                <span>{social.label}</span>
+                <Icon name="arrow-up-right" small />
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
     <div class="footer-bottom"><span>© 2026 Великогрибовицький ліцей Львівської міської ради</span><span>Створено з турботою про шкільну спільноту ♥</span></div>
